@@ -1,0 +1,10 @@
+Canonical design docs:
+- docs/CAPABILITY-CROSSWALK-AND-LATEST-FIXES.md
+- docs/DATABASE-SCHEMA.md
+- docs/API-ROUTES-AND-CONTRACTS.md
+- docs/API-COVERAGE-MATRIX.md
+- docs/BUSINESS-WORKFLOWS.md
+- docs/DECISIONS-AND-OPEN-CHOICES.md
+- docs/SEED-DATA-MAPPING.md
+Historical capability references only: structure/*-LEGACY-REFERENCE.md
+Implementation tasks: tasks/01-foundation.md through tasks/09-hardening-docs.md

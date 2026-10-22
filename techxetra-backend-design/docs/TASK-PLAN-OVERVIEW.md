@@ -1,0 +1,3 @@
+# Implementation Task Plan Overview
+
+Execute detailed tasks in order: TASK-01 project setup; TASK-02 PostgreSQL schema; TASK-03 middleware/foundation; TASK-04 auth/session/profile; TASK-05 catalog/events; TASK-06 teams; TASK-07 purchases/reservations; TASK-08 manual UPI/payment review; TASK-09 tickets/QR; TASK-10 e-sports; TASK-11 staff; TASK-12 admin/reporting/audit; TASK-13 testing/deployment. These task files are implementation instructions and must follow canonical docs, especially `docs/CAPABILITY-CROSSWALK-AND-LATEST-FIXES.md`, `docs/DATABASE-SCHEMA.md`, `docs/API-ROUTES-AND-CONTRACTS.md`, and `docs/BUSINESS-WORKFLOWS.md`. If a task conflicts with those current greenfield contracts, canonical docs win.

@@ -1,0 +1,1453 @@
+{
+  "festival": {
+    "name": "TechXetra 2026",
+    "edition": "18th National Technical Festival",
+    "organizing_body": "Tezpur University, Assam",
+    "dates": "November 6 - November 8, 2026",
+    "theme": "Autonomous Frontiers & Sustainable Intelligence"
+  },
+  "events": [
+    {
+      "event_number": 1,
+      "id": "00000000-0000-4000-8000-000000000101",
+      "name": "HackXetra: Hackathon",
+      "category": "TECHNICAL",
+      "sub_category": "Departmental",
+      "organizer": "TU-CODES",
+      "venue": "Central Computing Centre (CCC)",
+      "fest_day": 1,
+      "description": "A 48-hour intense product development sprint hackathon under TechXetra, Tezpur University. Participating teams pick a real-world problem statement and build it into a production-grade working product. Evaluated purely on live product demonstration and market value without PPT presentations.",
+      "is_team_event": true,
+      "min_team_size": 2,
+      "max_team_size": 5,
+      "capacity": 50,
+      "eligibility": "Undergraduate students in India with valid student ID",
+      "registration": {
+        "platform": "TechXetra Portal / Unstop",
+        "registration_fee_inr": 100,
+        "fee_type": "Per person",
+        "accommodation_and_food_fee_inr": 300,
+        "accommodation_notes": "Charged separately for participants requiring on-campus stay/meals"
+      },
+      "tracks": [
+        {
+          "name": "AI & Automation",
+          "scope": "Management agents, copilots, workflow automation"
+        },
+        {
+          "name": "Cloud & Domain",
+          "scope": "Cloud-native tools, infrastructure, domain-specific platforms"
+        },
+        {
+          "name": "Agentic Workflow",
+          "scope": "Multi-step autonomous agents, task orchestration, AI-driven pipelines"
+        },
+        {
+          "name": "Sustainability",
+          "scope": "Carbon emission control, cost optimization, energy efficiency, resource/waste"
+        }
+      ],
+      "rules": [
+        "Team size must be 2-5 members; no member may belong to more than one team.",
+        "All code must be written during the 48-hour build sprint window.",
+        "AI tool usage (Copilot, Claude, ChatGPT, Cursor, v0, etc.) is fully permitted and encouraged; tools used must be noted in the project README.",
+        "Pre-built products are prohibited; commit history will be spot-checked.",
+        "Source code must be version-controlled and pushed to GitHub prior to the deadline.",
+        "No slide-deck (PPT) presentations allowed; evaluation is based strictly on live product demo and short pitch.",
+        "One problem statement per team with cap enforced per problem statement on a first-come basis."
+      ],
+      "evaluation_criteria": [
+        { "criterion": "Uniqueness", "weight_percentage": 20, "focus": "Originality and novelty of the proposed solution" },
+        { "criterion": "Technical Execution", "weight_percentage": 25, "focus": "Code quality, architecture and depth of technical implementation" },
+        { "criterion": "Robustness", "weight_percentage": 20, "focus": "Stability, reliability and completeness of the working build" },
+        { "criterion": "Real-World Impact & Market Value", "weight_percentage": 20, "focus": "Practical relevance, scalability and commercial potential" },
+        { "criterion": "Pitch & Demo", "weight_percentage": 15, "focus": "Clarity, persuasiveness and confidence of live product pitch" }
+      ],
+      "prizes": {
+        "total_prize_pool_inr": 45000,
+        "breakdown": [
+          { "position": "Winner (1st Prize)", "prize_inr": 25000, "reward": "Rs. 25,000 + Trophy + Certificate" },
+          { "position": "Runner-up (2nd Prize)", "prize_inr": 12000, "reward": "Rs. 12,000 + Certificate" },
+          { "position": "Second Runner-up (3rd Prize)", "prize_inr": 8000, "reward": "Rs. 8,000 + Certificate" }
+        ],
+        "notes": "Top 3 teams receive direct incubation fast-track interviews."
+      },
+      "timeline": [
+        { "stage": "Day 0", "activities": "Registration closes; Team credentials allotted" },
+        { "stage": "Day 1", "activities": "Check-in, Opening ceremony, Track problem release, 48-hour build sprint begins, Mentorship Round 1" },
+        { "stage": "Day 2", "activities": "Mentorship Round 2, Mid-point architecture check" },
+        { "stage": "Day 3", "activities": "Final GitHub push deadline, Live judging demos, Winner announcement" }
+      ],
+      "submitted_by": "Shujan Mashuq Islam (B.Tech CS, 5th Sem, CSB24067)"
+    },
+    {
+      "event_number": 2,
+      "id": "00000000-0000-4000-8000-000000000102",
+      "name": "Robo Race",
+      "category": "TECHNICAL",
+      "sub_category": "Departmental",
+      "organizer": "Robotics Club, Tezpur University",
+      "venue": "Basketball Court (Outdoor Arena)",
+      "fest_day": 2,
+      "description": "Design and build a wired or wireless manually controlled robot capable of traversing complex terrains featuring sand pits, oil slicks, speed breakers, sharp hairpins, and elevated bridges in minimum time.",
+      "is_team_event": true,
+      "min_team_size": 1,
+      "max_team_size": 4,
+      "capacity": 40,
+      "eligibility": "Open to all students with valid college ID",
+      "registration": {
+        "registration_fee_inr": 200,
+        "fee_type": "Per team"
+      },
+      "rules": [
+        "Maximum bot dimensions: 30cm x 30cm x 30cm at start.",
+        "Maximum bot weight: 5 kg (excluding controller and external power battery if wired).",
+        "Maximum onboard voltage: 24V DC.",
+        "Readymade toy car chassis are strictly prohibited; custom chassis required.",
+        "Each team gets 2 chances on the track; the lowest run time determines ranking.",
+        "Touching the bot during the race incurs a 10-second penalty per touch."
+      ],
+      "prizes": {
+        "total_prize_pool_inr": 15000,
+        "breakdown": [
+          { "position": "Winner (1st Prize)", "prize_inr": 9000, "reward": "Rs. 9,000 + Trophy + Certificate" },
+          { "position": "Runner-up (2nd Prize)", "prize_inr": 6000, "reward": "Rs. 6,000 + Certificate" }
+        ]
+      }
+    },
+    {
+      "event_number": 3,
+      "id": "00000000-0000-4000-8000-000000000103",
+      "name": "Robo Soccer",
+      "category": "TECHNICAL",
+      "sub_category": "Departmental",
+      "organizer": "Robotics Club, Tezpur University",
+      "venue": "Badminton Court",
+      "fest_day": 2,
+      "description": "A high-octane 1v1 robotic football showdown where bots battle on an arena to shoot tennis balls into the opponent's goal post within 6 minutes.",
+      "is_team_event": true,
+      "min_team_size": 1,
+      "max_team_size": 4,
+      "capacity": 32,
+      "registration": {
+        "registration_fee_inr": 250,
+        "fee_type": "Per team"
+      },
+      "rules": [
+        "Bot size must fit within 30cm x 30cm x 30cm. Maximum weight 5 kg.",
+        "Match duration: Two halves of 3 minutes each with a 1-minute halftime break.",
+        "Bots may not grab, envelop, or hold the ball completely; dragging or pushing only.",
+        "Intentional destruction or entanglement of opponent's wires results in a red card disqualification."
+      ],
+      "prizes": {
+        "total_prize_pool_inr": 15000,
+        "breakdown": [
+          { "position": "Winner (1st Prize)", "prize_inr": 10000, "reward": "Rs. 10,000 + Trophy + Certificate" },
+          { "position": "Runner-up (2nd Prize)", "prize_inr": 5000, "reward": "Rs. 5,000 + Certificate" }
+        ]
+      }
+    },
+    {
+      "event_number": 4,
+      "id": "00000000-0000-4000-8000-000000000104",
+      "name": "Algo Maze",
+      "category": "TECHNICAL",
+      "sub_category": "Departmental",
+      "organizer": "TU-CODES",
+      "venue": "CSE Software Lab 2",
+      "fest_day": 1,
+      "description": "A fast-paced algorithmic coding race. Solve data structure and graph traversal pathfinding puzzles in C++, Python, or Java to navigate virtual autonomous agents through labyrinth challenges.",
+      "is_team_event": false,
+      "min_team_size": 1,
+      "max_team_size": 1,
+      "capacity": 80,
+      "registration": {
+        "registration_fee_inr": 50,
+        "fee_type": "Per person"
+      },
+      "rules": [
+        "Languages permitted: C, C++, Python 3, Java.",
+        "Standard competitive programming rules apply; plagiarism check enabled via MOSS.",
+        "2-hour sprint solving 5 algorithmic maze routing problems.",
+        "Tie-breaker based on least submission time with penalty minutes."
+      ],
+      "prizes": {
+        "total_prize_pool_inr": 10000,
+        "breakdown": [
+          { "position": "1st Prize", "prize_inr": 6000, "reward": "Rs. 6,000 + Certificate" },
+          { "position": "2nd Prize", "prize_inr": 4000, "reward": "Rs. 4,000 + Certificate" }
+        ]
+      }
+    },
+    {
+      "event_number": 5,
+      "id": "00000000-0000-4000-8000-000000000105",
+      "name": "Circuitrix: Circuit Building",
+      "category": "TECHNICAL",
+      "sub_category": "Departmental",
+      "organizer": "IEEE Student Branch, Tezpur University",
+      "venue": "ECE Hardware Simulation Lab",
+      "fest_day": 1,
+      "description": "An online circuit design competition using LTspice where participants solve circuit design problems, optimize component values, and present simulation results alongside technical documentation.",
+      "is_team_event": true,
+      "min_team_size": 1,
+      "max_team_size": 3,
+      "capacity": 40,
+      "eligibility": "Undergraduate students in India",
+      "registration": {
+        "platform": "TechXetra Portal / Unstop",
+        "registration_fee_inr": 100,
+        "fee_type": "Per team"
+      },
+      "software_required": "LTspice",
+      "event_format": [
+        { "stage": 1, "name": "Circuit Design Challenge", "details": "Online 3-hour problem-solving format using LTspice." },
+        { "stage": 2, "name": "Viva Voce", "details": "Conducted virtually or in person for shortlisted teams." }
+      ],
+      "submission_requirements": [
+        "LTspice Schematic File (.asc)",
+        "Solution Video (maximum 5 minutes)",
+        "Solution Brief with simulation waveforms"
+      ],
+      "evaluation_criteria": [
+        { "criterion": "Technical Merit", "focus": "Component selection, topology, value optimization, simulation quality" },
+        { "criterion": "Problem Requirements", "focus": "Fulfillment of stated objectives in problem statement" },
+        { "criterion": "Presentation", "focus": "Component labelling, schematic quality, video clarity" }
+      ],
+      "prizes": {
+        "total_prize_pool_inr": 10000,
+        "breakdown": [
+          { "position": "Winner (1st Prize)", "prize_inr": 5000, "reward": "Rs. 5,000 + Certificate" },
+          { "position": "Runner-up (2nd Prize)", "prize_inr": 3000, "reward": "Rs. 3,000 + Certificate" },
+          { "position": "Second Runner-up (3rd Prize)", "prize_inr": 2000, "reward": "Rs. 2,000 + Certificate" }
+        ]
+      },
+      "coordinators": [
+        { "role": "Event Head", "name": "Jamilur Rahman", "phone": "9957845476" },
+        { "role": "Event Head", "name": "Rim Baruah", "phone": "8486237022" },
+        { "role": "Coordinator", "name": "Partha Pratim Das", "phone": "6001853929" },
+        { "role": "Faculty Coordinator", "name": "Dr. Rupam Goswami", "designation": "Assistant Professor, Dept of ECE" }
+      ],
+      "submitted_by": "Akshay R. (Vice-Chairperson, IEEE Student Branch, Tezpur University)"
+    },
+    {
+      "event_number": 6,
+      "id": "00000000-0000-4000-8000-000000000106",
+      "name": "Kinematic Model",
+      "category": "TECHNICAL",
+      "sub_category": "Departmental",
+      "organizer": "Department of Mechanical Engineering",
+      "venue": "Mechanical Workshop",
+      "fest_day": 2,
+      "description": "Design and present physical or functional kinematic mechanisms (four-bar linkages, cam-followers, gear trains, Geneva mechanisms). Judged on transmission efficiency, degrees of freedom, and craftsmanship.",
+      "is_team_event": true,
+      "min_team_size": 1,
+      "max_team_size": 3,
+      "capacity": 30,
+      "registration": {
+        "registration_fee_inr": 100,
+        "fee_type": "Per team"
+      },
+      "rules": [
+        "Working physical prototype must be demonstrated to judges.",
+        "Fabrication using wood, acrylic, 3D printing, sheet metal, or PVC allowed.",
+        "Each team gets a 10-minute presentation slot including Q&A from the jury."
+      ],
+      "prizes": {
+        "total_prize_pool_inr": 10000,
+        "breakdown": [
+          { "position": "1st Prize", "prize_inr": 6000, "reward": "Rs. 6,000 + Certificate" },
+          { "position": "2nd Prize", "prize_inr": 4000, "reward": "Rs. 4,000 + Certificate" }
+        ]
+      }
+    },
+    {
+      "event_number": 7,
+      "id": "00000000-0000-4000-8000-000000000107",
+      "name": "CAD Clash: AutoCAD",
+      "category": "TECHNICAL",
+      "sub_category": "Departmental",
+      "organizer": "Department of Civil Engineering",
+      "venue": "Civil CAD Lab",
+      "fest_day": 1,
+      "description": "Replicate a physical building model in AutoCAD accurately to a given scale with maximum structural details within 3 hours.",
+      "is_team_event": true,
+      "min_team_size": 2,
+      "max_team_size": 2,
+      "capacity": 30,
+      "registration": {
+        "registration_fee_inr": 0,
+        "fee_type": "Free Entry"
+      },
+      "device_requirement": "Bring own laptops with AutoCAD pre-downloaded and initialized",
+      "structure_and_rules": {
+        "initial_inspection": "15-minute window at start to analyze model, take measurements, and sketch rough layouts",
+        "drafting_access": "Models kept on central tables for continuous verification",
+        "standard_duration_hours": 3,
+        "grace_period_and_penalty": "Extra 30 minutes allowed with proportional deduction up to 20 marks"
+      },
+      "evaluation_metrics": [
+        "Structural accuracy",
+        "Completeness",
+        "Drafting cleanliness",
+        "Fidelity to physical model"
+      ],
+      "prizes": {
+        "total_prize_pool_inr": 20000,
+        "breakdown": [
+          { "position": "First Prize", "prize_inr": 10000, "reward": "Rs. 10,000 + Certificate" },
+          { "position": "Second Prize", "prize_inr": 6000, "reward": "Rs. 6,000 + Certificate" },
+          { "position": "Third Prize", "prize_inr": 4000, "reward": "Rs. 4,000 + Certificate" }
+        ]
+      }
+    },
+    {
+      "event_number": 8,
+      "id": "00000000-0000-4000-8000-000000000108",
+      "name": "Constrolix: Bridge Construction",
+      "category": "TECHNICAL",
+      "sub_category": "Departmental",
+      "organizer": "Department of Civil Engineering",
+      "venue": "Dean's Foyer",
+      "fest_day": 2,
+      "description": "Construct a weight-bearing bridge measuring 50 cm in length using provided popsicle sticks and glue. The structure with the highest load-to-weight efficiency ratio wins.",
+      "is_team_event": true,
+      "min_team_size": 1,
+      "max_team_size": 5,
+      "capacity": 35,
+      "registration": {
+        "registration_fee_inr": 0,
+        "fee_type": "Free Entry"
+      },
+      "materials_provided": [
+        "150 popsicle sticks",
+        "Glue",
+        "Thread roll",
+        "Cutter"
+      ],
+      "duration_and_rules": {
+        "standard_duration_hours": 3,
+        "grace_period_and_penalty": "Additional 30 minutes allowed with proportional mark deduction up to max 20 marks"
+      },
+      "judging_criteria": "Efficiency determined by calculating the ratio of maximum load taken by bridge to its self-weight.",
+      "prizes": {
+        "total_prize_pool_inr": 10000,
+        "breakdown": [
+          { "position": "First Prize", "prize_inr": 5000, "reward": "Rs. 5,000 + Certificate" },
+          { "position": "Second Prize", "prize_inr": 3000, "reward": "Rs. 3,000 + Certificate" },
+          { "position": "Third Prize", "prize_inr": 2000, "reward": "Rs. 2,000 + Certificate" }
+        ]
+      }
+    },
+    {
+      "event_number": 9,
+      "id": "00000000-0000-4000-8000-000000000109",
+      "name": "Frontend Frenzy",
+      "category": "TECHNICAL",
+      "sub_category": "Departmental",
+      "tagline": "Pixels, perfected under pressure. DESIGN FAST, BUILD SMART, ADAPT FASTER",
+      "organizer": "TU CODES / TechXetra 2026 Core Committee",
+      "venue": "Computer Lab 1",
+      "fest_day": 2,
+      "description": "A high-intensity web engineering sprint. Recreate a pixel-perfect modern responsive UI mockup under pressure, featuring an unannounced mid-challenge twist requirement.",
+      "is_team_event": true,
+      "min_team_size": 1,
+      "max_team_size": 2,
+      "capacity": 60,
+      "eligibility": "Open to registered students with valid institutional identity card",
+      "registration": {
+        "registration_fee_inr": 100,
+        "fee_type": "Per team"
+      },
+      "tools_allowed": [
+        "HTML5",
+        "CSS3",
+        "JavaScript (ES6+)",
+        "React",
+        "Vue",
+        "Tailwind CSS"
+      ],
+      "rounds": [
+        { "round_number": 1, "name": "Screening Quiz", "duration": "45 minutes", "description": "Web fundamentals, semantic markup, responsive design debugging." },
+        { "round_number": 2, "name": "Live Build", "duration": "3 hours", "description": "Rebuilding official design brief as a fully working styled webpage with surprise twist at 11:45 AM." }
+      ],
+      "prizes": {
+        "total_prize_pool_inr": 15000,
+        "breakdown": [
+          { "position": "Winner (1st)", "prize_inr": 8000, "reward": "Rs. 8,000 + Certificate" },
+          { "position": "Runner-up (2nd)", "prize_inr": 5000, "reward": "Rs. 5,000 + Certificate" },
+          { "position": "3rd Place", "prize_inr": 2000, "reward": "Rs. 2,000 + Certificate" }
+        ]
+      },
+      "leadership": [
+        { "role": "Event Coordinator", "name": "Partha Pratim Das" },
+        { "role": "Event Lead", "name": "Yash Sharma" }
+      ]
+    },
+    {
+      "event_number": 10,
+      "id": "00000000-0000-4000-8000-000000000110",
+      "name": "Sustainathon",
+      "category": "TECHNICAL",
+      "sub_category": "Departmental",
+      "organizer": "Department of Energy & Environmental Science",
+      "venue": "Energy Park Seminar Room",
+      "fest_day": 2,
+      "description": "A green technology problem-solving hackathon. Propose and prototype tech-driven solutions for renewable energy microgrids, carbon footprint reductions, and zero-emission campuses.",
+      "is_team_event": true,
+      "min_team_size": 2,
+      "max_team_size": 4,
+      "capacity": 30,
+      "registration": {
+        "registration_fee_inr": 100,
+        "fee_type": "Per team"
+      },
+      "rules": [
+        "Presentations must include lifecycle sustainability analysis and unit cost estimation.",
+        "Physical proof-of-concept or computer simulation required."
+      ],
+      "prizes": {
+        "total_prize_pool_inr": 12000,
+        "breakdown": [
+          { "position": "1st Prize", "prize_inr": 7000, "reward": "Rs. 7,000 + Certificate" },
+          { "position": "2nd Prize", "prize_inr": 5000, "reward": "Rs. 5,000 + Certificate" }
+        ]
+      }
+    },
+    {
+      "event_number": 11,
+      "id": "00000000-0000-4000-8000-000000000111",
+      "name": "Waste Roulette: Waste Management Pitch",
+      "category": "TECHNICAL",
+      "sub_category": "Departmental",
+      "organizer": "Department of Chemical Sciences",
+      "venue": "Council Room 3",
+      "fest_day": 2,
+      "description": "Teams spin the roulette to receive a random municipal or e-waste type (electronic circuit waste, bio-medical sludge, agricultural stubble) and have 90 minutes to design an upcycling economic product pitch.",
+      "is_team_event": true,
+      "min_team_size": 1,
+      "max_team_size": 3,
+      "capacity": 25,
+      "registration": {
+        "registration_fee_inr": 0,
+        "fee_type": "Free Entry"
+      },
+      "prizes": {
+        "total_prize_pool_inr": 8000,
+        "breakdown": [
+          { "position": "1st Prize", "prize_inr": 5000, "reward": "Rs. 5,000 + Certificate" },
+          { "position": "2nd Prize", "prize_inr": 3000, "reward": "Rs. 3,000 + Certificate" }
+        ]
+      }
+    },
+    {
+      "event_number": 12,
+      "id": "00000000-0000-4000-8000-000000000112",
+      "name": "Tic(k) on Board",
+      "category": "TECHNICAL",
+      "sub_category": "Departmental",
+      "organizer": "Department of Design",
+      "venue": "Design Studio 1",
+      "fest_day": 2,
+      "description": "Reinventing traditional board game mechanics. Participants compete in a design aptitude quiz followed by a physical prototype sprint to transform classic board games into novel interactive learning tools.",
+      "is_team_event": false,
+      "min_team_size": 1,
+      "max_team_size": 1,
+      "capacity": 40,
+      "registration": {
+        "registration_fee_inr": 50,
+        "fee_type": "Per person"
+      },
+      "rounds": [
+        { "round_number": 1, "name": "Design Aptitude Round", "duration": "30 minutes", "description": "30 aptitude questions referring to UCEED/CEED standards." },
+        { "round_number": 2, "name": "Creative Ability", "duration": "1 hour", "description": "Reimagining and redesigning a regular board game." }
+      ],
+      "prizes": {
+        "total_prize_pool_inr": 8000,
+        "breakdown": [
+          { "position": "Winner", "prize_inr": 5000, "reward": "Rs. 5,000 + Certificate" },
+          { "position": "Runner-up", "prize_inr": 3000, "reward": "Rs. 3,000 + Certificate" }
+        ]
+      },
+      "event_heads": ["Kritika Talukdar", "Bavrawee Phukan"],
+      "judge": "Dr. Srinivasan G (Asst. Prof, Dept of Design)"
+    },
+    {
+      "event_number": 13,
+      "id": "00000000-0000-4000-8000-000000000201",
+      "name": "TechXibition (School Level, Class 5-8)",
+      "category": "INTERACTIVE",
+      "sub_category": "Interactive",
+      "organizer": "School Outreach Cell, Tezpur University",
+      "venue": "Community Hall Exhibition Stalls",
+      "fest_day": 1,
+      "description": "Science and innovation model exhibition for junior school innovators. Showcasing working models in eco-friendly energy, simple machines, and everyday physics solutions.",
+      "is_team_event": true,
+      "min_team_size": 1,
+      "max_team_size": 3,
+      "capacity": 40,
+      "registration": {
+        "registration_fee_inr": 0,
+        "fee_type": "Free Entry (School Delegation)"
+      },
+      "prizes": {
+        "total_prize_pool_inr": 6000,
+        "breakdown": [
+          { "position": "1st Prize", "prize_inr": 3500, "reward": "Rs. 3,500 + Certificate + Science Kit" },
+          { "position": "2nd Prize", "prize_inr": 2500, "reward": "Rs. 2,500 + Certificate" }
+        ]
+      }
+    },
+    {
+      "event_number": 14,
+      "id": "00000000-0000-4000-8000-000000000202",
+      "name": "TechXibition (School Level, Class 9-12)",
+      "category": "INTERACTIVE",
+      "sub_category": "Interactive",
+      "organizer": "School Outreach Cell, Tezpur University",
+      "venue": "Community Hall Exhibition Stalls",
+      "fest_day": 1,
+      "description": "Senior secondary school innovation showcase. Projects in robotics, renewable energy circuits, sensor-based automation, and digital technology.",
+      "is_team_event": true,
+      "min_team_size": 1,
+      "max_team_size": 3,
+      "capacity": 40,
+      "registration": {
+        "registration_fee_inr": 0,
+        "fee_type": "Free Entry (School Delegation)"
+      },
+      "prizes": {
+        "total_prize_pool_inr": 8000,
+        "breakdown": [
+          { "position": "1st Prize", "prize_inr": 5000, "reward": "Rs. 5,000 + Certificate" },
+          { "position": "2nd Prize", "prize_inr": 3000, "reward": "Rs. 3,000 + Certificate" }
+        ]
+      }
+    },
+    {
+      "event_number": 15,
+      "id": "00000000-0000-4000-8000-000000000203",
+      "name": "TechXibition (UG Level)",
+      "category": "INTERACTIVE",
+      "sub_category": "Interactive",
+      "organizer": "TechXetra Technical Committee",
+      "venue": "KBR Foyer Innovation Alley",
+      "fest_day": 1,
+      "description": "National level undergraduate engineering project exposition. Final year engineering capstone projects, patented inventions, and working hardware prototypes.",
+      "is_team_event": true,
+      "min_team_size": 1,
+      "max_team_size": 4,
+      "capacity": 50,
+      "registration": {
+        "registration_fee_inr": 150,
+        "fee_type": "Per team"
+      },
+      "prizes": {
+        "total_prize_pool_inr": 15000,
+        "breakdown": [
+          { "position": "Best Innovation", "prize_inr": 10000, "reward": "Rs. 10,000 + Certificate" },
+          { "position": "Runner-up", "prize_inr": 5000, "reward": "Rs. 5,000 + Certificate" }
+        ]
+      }
+    },
+    {
+      "event_number": 16,
+      "id": "00000000-0000-4000-8000-000000000204",
+      "name": "Wrangle: Debate (Junior Level)",
+      "category": "INTERACTIVE",
+      "sub_category": "Interactive",
+      "venue": "Dean's Meeting Hall",
+      "fest_day": 1,
+      "description": "Conventional debate competition for school students (Classes 8 to 12) on ethical technology, social media impacts, and artificial intelligence in schools.",
+      "is_team_event": false,
+      "min_team_size": 1,
+      "max_team_size": 1,
+      "capacity": 30,
+      "registration": {
+        "registration_fee_inr": 0,
+        "fee_type": "Free Entry"
+      },
+      "prizes": {
+        "total_prize_pool_inr": 5000,
+        "breakdown": [
+          { "position": "Best Speaker (For)", "prize_inr": 2500, "reward": "Rs. 2,500 + Certificate" },
+          { "position": "Best Speaker (Against)", "prize_inr": 2500, "reward": "Rs. 2,500 + Certificate" }
+        ]
+      }
+    },
+    {
+      "event_number": 17,
+      "id": "00000000-0000-4000-8000-000000000205",
+      "name": "Wrangle: Debate (University Level)",
+      "category": "INTERACTIVE",
+      "sub_category": "Interactive",
+      "venue": "Humanities Seminar Hall",
+      "fest_day": 2,
+      "description": "Parliamentary debate showdown on geopolitics of semiconductor supply chains, autonomous defense systems, and digital sovereignty.",
+      "is_team_event": false,
+      "min_team_size": 1,
+      "max_team_size": 1,
+      "capacity": 30,
+      "registration": {
+        "registration_fee_inr": 50,
+        "fee_type": "Per person"
+      },
+      "prizes": {
+        "total_prize_pool_inr": 8000,
+        "breakdown": [
+          { "position": "Best Debater", "prize_inr": 5000, "reward": "Rs. 5,000 + Certificate" },
+          { "position": "Second Best Debater", "prize_inr": 3000, "reward": "Rs. 3,000 + Certificate" }
+        ]
+      }
+    },
+    {
+      "event_number": 18,
+      "id": "00000000-0000-4000-8000-000000000206",
+      "name": "Full Force: Sci-Biz Quiz",
+      "category": "INTERACTIVE",
+      "sub_category": "Interactive",
+      "venue": "KBR Auditorium",
+      "fest_day": 1,
+      "description": "A premier quiz exploring breakthroughs in physical sciences, deep tech startups, venture capital history, and global corporate patent battles.",
+      "is_team_event": true,
+      "min_team_size": 1,
+      "max_team_size": 2,
+      "capacity": 60,
+      "registration": {
+        "registration_fee_inr": 100,
+        "fee_type": "Per team"
+      },
+      "prizes": {
+        "total_prize_pool_inr": 10000,
+        "breakdown": [
+          { "position": "1st Prize", "prize_inr": 6000, "reward": "Rs. 6,000 + Certificate" },
+          { "position": "2nd Prize", "prize_inr": 4000, "reward": "Rs. 4,000 + Certificate" }
+        ]
+      }
+    },
+    {
+      "event_number": 19,
+      "id": "00000000-0000-4000-8000-000000000207",
+      "name": "Full Throttle: General Quiz",
+      "category": "INTERACTIVE",
+      "sub_category": "Interactive",
+      "venue": "KBR Auditorium",
+      "fest_day": 2,
+      "description": "The flagship open general quiz covering world history, current affairs, sports legends, pop culture, and global geography.",
+      "is_team_event": true,
+      "min_team_size": 1,
+      "max_team_size": 2,
+      "capacity": 60,
+      "registration": {
+        "registration_fee_inr": 100,
+        "fee_type": "Per team"
+      },
+      "prizes": {
+        "total_prize_pool_inr": 10000,
+        "breakdown": [
+          { "position": "1st Prize", "prize_inr": 6000, "reward": "Rs. 6,000 + Certificate" },
+          { "position": "2nd Prize", "prize_inr": 4000, "reward": "Rs. 4,000 + Certificate" }
+        ]
+      }
+    },
+    {
+      "event_number": 20,
+      "id": "00000000-0000-4000-8000-000000000208",
+      "name": "Full Screen: MELA Quiz",
+      "category": "INTERACTIVE",
+      "sub_category": "Interactive",
+      "venue": "KBR Auditorium",
+      "fest_day": 2,
+      "description": "Music, Entertainment, Literature, and Arts quiz. Celebrating classic cinema, anime, comic book universes, rock music lore, and modern television.",
+      "is_team_event": true,
+      "min_team_size": 1,
+      "max_team_size": 2,
+      "capacity": 60,
+      "registration": {
+        "registration_fee_inr": 100,
+        "fee_type": "Per team"
+      },
+      "prizes": {
+        "total_prize_pool_inr": 10000,
+        "breakdown": [
+          { "position": "1st Prize", "prize_inr": 6000, "reward": "Rs. 6,000 + Certificate" },
+          { "position": "2nd Prize", "prize_inr": 4000, "reward": "Rs. 4,000 + Certificate" }
+        ]
+      }
+    },
+    {
+      "event_number": 21,
+      "id": "00000000-0000-4000-8000-000000000209",
+      "name": "Full Frontier: India/NE Quiz",
+      "category": "INTERACTIVE",
+      "sub_category": "Interactive",
+      "venue": "KBR Auditorium",
+      "fest_day": 3,
+      "description": "A quiz dedicated to the heritage, biodiversity, indigenous traditions, ethnic folklore, and modern milestones of Northeast India and the nation.",
+      "is_team_event": true,
+      "min_team_size": 1,
+      "max_team_size": 2,
+      "capacity": 60,
+      "registration": {
+        "registration_fee_inr": 100,
+        "fee_type": "Per team"
+      },
+      "prizes": {
+        "total_prize_pool_inr": 10000,
+        "breakdown": [
+          { "position": "1st Prize", "prize_inr": 6000, "reward": "Rs. 6,000 + Certificate" },
+          { "position": "2nd Prize", "prize_inr": 4000, "reward": "Rs. 4,000 + Certificate" }
+        ]
+      }
+    },
+    {
+      "event_number": 22,
+      "id": "00000000-0000-4000-8000-000000000210",
+      "name": "Poster Presentation (Research Based)",
+      "category": "INTERACTIVE",
+      "sub_category": "Interactive",
+      "venue": "Science Complex Corridor",
+      "fest_day": 1,
+      "description": "Peer-reviewed research poster presentation for scholars and students. Presenting original research in engineering, computer science, and applied mathematics.",
+      "is_team_event": true,
+      "min_team_size": 1,
+      "max_team_size": 2,
+      "capacity": 40,
+      "registration": {
+        "registration_fee_inr": 100,
+        "fee_type": "Per team"
+      },
+      "prizes": {
+        "total_prize_pool_inr": 8000,
+        "breakdown": [
+          { "position": "Best Research Poster", "prize_inr": 5000, "reward": "Rs. 5,000 + Certificate" },
+          { "position": "Runner-up", "prize_inr": 3000, "reward": "Rs. 3,000 + Certificate" }
+        ]
+      }
+    },
+    {
+      "event_number": 23,
+      "id": "00000000-0000-4000-8000-000000000211",
+      "name": "Workshops (pre-TechXtra)",
+      "category": "WORKSHOP",
+      "sub_category": "Technical Workshops",
+      "venue": "Dean's Audio-Visual Room",
+      "fest_day": 1,
+      "description": "Certified hands-on technical workshop on Generative AI agent orchestration, edge computing, and real-time computer vision deployment.",
+      "is_team_event": false,
+      "min_team_size": 1,
+      "max_team_size": 1,
+      "capacity": 100,
+      "registration": {
+        "registration_fee_inr": 150,
+        "fee_type": "Per person (Includes workshop kit & certificate)"
+      },
+      "prizes": {
+        "notes": "Verified participants receive certified participation credentials and course material."
+      }
+    },
+    {
+      "event_number": 24,
+      "id": "00000000-0000-4000-8000-000000000212",
+      "name": "Alumni / Invited Talks",
+      "category": "INTERACTIVE",
+      "sub_category": "Interactive",
+      "venue": "Kalaguru Sangeet Mahavidyalaya Hall",
+      "fest_day": 1,
+      "description": "Keynote addresses and fire-side chats featuring distinguished alumni leaders in tech, aerospace engineers, and venture capital investors.",
+      "is_team_event": false,
+      "min_team_size": 1,
+      "max_team_size": 1,
+      "capacity": 200,
+      "registration": {
+        "registration_fee_inr": 0,
+        "fee_type": "Free Entry for all delegates"
+      }
+    },
+    {
+      "event_number": 25,
+      "id": "00000000-0000-4000-8000-000000000213",
+      "name": "Treasure Hunt",
+      "category": "RECREATIONAL",
+      "sub_category": "Recreational",
+      "venue": "Entire Tezpur University Campus",
+      "fest_day": 3,
+      "description": "An adventurous campus-wide race solving cryptic cipher clues, geo-tagged QR codes, and logical puzzles hidden across historic university spots.",
+      "is_team_event": true,
+      "min_team_size": 2,
+      "max_team_size": 4,
+      "capacity": 50,
+      "registration": {
+        "registration_fee_inr": 150,
+        "fee_type": "Per team"
+      },
+      "prizes": {
+        "total_prize_pool_inr": 10000,
+        "breakdown": [
+          { "position": "1st Prize", "prize_inr": 7000, "reward": "Rs. 7,000 + Certificate" },
+          { "position": "2nd Prize", "prize_inr": 3000, "reward": "Rs. 3,000 + Certificate" }
+        ]
+      }
+    },
+    {
+      "event_number": 26,
+      "id": "00000000-0000-4000-8000-000000000301",
+      "name": "Inaugural Marathon",
+      "category": "RECREATIONAL",
+      "sub_category": "Recreational",
+      "venue": "University Main Gate to Sports Complex",
+      "fest_day": 1,
+      "description": "5-Kilometre morning fitness run flagging off TechXetra 2026. Promoting student wellness and green sustainability across campus.",
+      "is_team_event": false,
+      "min_team_size": 1,
+      "max_team_size": 1,
+      "capacity": 200,
+      "registration": {
+        "registration_fee_inr": 50,
+        "fee_type": "Per person (Includes custom marathon bib)"
+      },
+      "prizes": {
+        "total_prize_pool_inr": 6000,
+        "breakdown": [
+          { "position": "1st Male & Female", "prize_inr": 3000, "reward": "Rs. 3,000 each + Medal" }
+        ]
+      }
+    },
+    {
+      "event_number": 27,
+      "id": "00000000-0000-4000-8000-000000000302",
+      "name": "GrandmasteriX: Chess",
+      "category": "RECREATIONAL",
+      "sub_category": "Recreational",
+      "full_name": "Open Rapid Chess Tournament",
+      "venue": "Dean's Student Activity Centre",
+      "fest_day": 1,
+      "description": "FIDE-rated Swiss-system rapid chess tournament. 6 intense rounds of tactical combat with digital clocks.",
+      "eligibility": "University & School Students",
+      "mode": "Offline (Physical Board)",
+      "is_team_event": false,
+      "min_team_size": 1,
+      "max_team_size": 1,
+      "capacity": 64,
+      "registration": {
+        "registration_fee_inr": 50,
+        "fee_type": "Per person"
+      },
+      "tournament_format": "Open rapid tournament following Swiss system under standard FIDE guidelines.",
+      "time_control": "10 minutes + 2 seconds increment per move starting from move 1.",
+      "rules": [
+        "Touch-Move Rule applies strictly.",
+        "Making an illegal move twice results in an immediate loss.",
+        "Silence required; any communication/distraction leads to immediate disqualification.",
+        "Tie-break match time control: 5 minutes + 2 seconds increment.",
+        "Arriving more than 10 minutes late results in forfeit."
+      ],
+      "prizes": {
+        "total_prize_pool_inr": 8000,
+        "breakdown": [
+          { "position": "Champion", "prize_inr": 5000, "reward": "Rs. 5,000 + Trophy + Certificate" },
+          { "position": "Runner-up", "prize_inr": 3000, "reward": "Rs. 3,000 + Certificate" }
+        ]
+      }
+    },
+    {
+      "event_number": 28,
+      "id": "00000000-0000-4000-8000-000000000303",
+      "name": "Cubernetics: Rubik's Cube",
+      "category": "RECREATIONAL",
+      "sub_category": "Recreational",
+      "venue": "Student Activity Centre (SAC)",
+      "fest_day": 2,
+      "description": "WCA standard speedcubing showdown across 3x3 speedsolve and one-handed solve categories.",
+      "is_team_event": false,
+      "min_team_size": 1,
+      "max_team_size": 1,
+      "capacity": 50,
+      "registration": {
+        "registration_fee_inr": 50,
+        "fee_type": "Per person"
+      },
+      "equipment": "Cubes provided or participants may use personal cubes.",
+      "rounds": [
+        { "round_name": "Filtering Round", "details": "Single scramble solve; top participants advance." },
+        { "round_name": "Second Round", "details": "3 tries with 3 different scrambles; top 4 by average time advance." },
+        { "round_name": "Versus Matches", "details": "Live head-to-head speed rounds." }
+      ],
+      "timing_rules": {
+        "inspection_time_seconds": 15,
+        "solving_time": "Begins when timer released and stops when cube is fully solved."
+      },
+      "prizes": {
+        "total_prize_pool_inr": 6000,
+        "breakdown": [
+          { "position": "1st Prize", "prize_inr": 4000, "reward": "Rs. 4,000 + Medal" },
+          { "position": "2nd Prize", "prize_inr": 2000, "reward": "Rs. 2,000 + Medal" }
+        ]
+      }
+    },
+    {
+      "event_number": 29,
+      "id": "00000000-0000-4000-8000-000000000304",
+      "name": "ConXetra: Cosplay Convention",
+      "category": "RECREATIONAL",
+      "sub_category": "Recreational",
+      "venue": "KBR Main Stage",
+      "fest_day": 3,
+      "description": "Grand anime, pop-culture, gaming, and superhero cosplay competition. Contestants bring characters to life with handmade gear, dynamic skits, and character walk-ons.",
+      "is_team_event": false,
+      "min_team_size": 1,
+      "max_team_size": 1,
+      "capacity": 40,
+      "registration": {
+        "registration_fee_inr": 100,
+        "fee_type": "Per contestant"
+      },
+      "rules": [
+        "2-3 minutes stage runway and performance per participant.",
+        "No real weapons, pyrotechnics, or sharp metals allowed on stage.",
+        "Judged by external celebrity cosplay artists on costume fidelity, craft, and stage act."
+      ],
+      "prizes": {
+        "total_prize_pool_inr": 16000,
+        "breakdown": [
+          { "position": "Best in Show (1st)", "prize_inr": 10000, "reward": "Rs. 10,000 + Trophy" },
+          { "position": "Runner-up (2nd)", "prize_inr": 6000, "reward": "Rs. 6,000 + Trophy" }
+        ]
+      }
+    },
+    {
+      "event_number": 30,
+      "id": "00000000-0000-4000-8000-000000000305",
+      "name": "3-day Reel Making Competition",
+      "category": "RECREATIONAL",
+      "sub_category": "Recreational",
+      "venue": "Festival Campus & Online",
+      "fest_day": 3,
+      "description": "Cinematic visual storytelling competition. Capture the electric energy, concerts, robotic showdowns, and candid moments of TechXetra in a 60-second high-production Instagram Reel.",
+      "is_team_event": true,
+      "min_team_size": 1,
+      "max_team_size": 2,
+      "capacity": 50,
+      "registration": {
+        "registration_fee_inr": 50,
+        "fee_type": "Per team"
+      },
+      "rules": [
+        "Reel duration: 30 to 60 seconds (9:16 vertical aspect ratio).",
+        "All clips must be shot live during TechXetra 2026 on campus.",
+        "Final submission deadline: Day 3 at 3:00 PM."
+      ],
+      "prizes": {
+        "total_prize_pool_inr": 8000,
+        "breakdown": [
+          { "position": "Best Reel", "prize_inr": 5000, "reward": "Rs. 5,000 + Feature on official fest handle" },
+          { "position": "Runner-up", "prize_inr": 3000, "reward": "Rs. 3,000" }
+        ]
+      }
+    },
+    {
+      "event_number": 31,
+      "id": "00000000-0000-4000-8000-000000000306",
+      "name": "Mystery Event: Automobile Exhibition",
+      "category": "SHOWCASE",
+      "sub_category": "Showcase",
+      "venue": "Football Ground Parking Arena",
+      "fest_day": 2,
+      "description": "Exotic supercars, custom performance superbikes, rally vehicles, and electric formula student car exhibition by Northeast automotive clubs.",
+      "is_team_event": false,
+      "min_team_size": 1,
+      "max_team_size": 1,
+      "capacity": 500,
+      "registration": {
+        "registration_fee_inr": 0,
+        "fee_type": "Free Entry for all gate pass holders"
+      }
+    },
+    {
+      "event_number": 32,
+      "id": "00000000-0000-4000-8000-000000000307",
+      "name": "Museo Art Event",
+      "category": "RECREATIONAL",
+      "sub_category": "Recreational",
+      "full_name": "Museo Ceramic Trinket Tray Painting Experience",
+      "venue": "Fine Arts Gazebo",
+      "fest_day": 2,
+      "description": "Hands-on creative workshop where participants paint, personalize, and take home their own handcrafted ceramic trinket tray, accompanied by relaxing indie music.",
+      "is_team_event": false,
+      "min_team_size": 1,
+      "max_team_size": 1,
+      "capacity": 40,
+      "registration": {
+        "registration_fee_inr": 150,
+        "fee_type": "Per person (Includes ceramic tray & acrylic paint set)"
+      }
+    },
+    {
+      "event_number": 33,
+      "id": "00000000-0000-4000-8000-000000000401",
+      "name": "FIFA 24",
+      "category": "E_SPORTS",
+      "sub_category": "E-Sports",
+      "organizer": "TechXetra Gaming Guild",
+      "venue": "Gaming Lounge (SAC 1st Floor)",
+      "fest_day": 1,
+      "description": "PlayStation 5 1v1 console soccer battle. 6-minute tactical clash of virtual football titans in a knockout bracket.",
+      "is_team_event": false,
+      "min_team_size": 1,
+      "max_team_size": 1,
+      "capacity": 64,
+      "registration": {
+        "registration_fee_inr": 100,
+        "fee_type": "Per player"
+      },
+      "rules": [
+        "Platform: PlayStation 5.",
+        "Match Half Length: 5 minutes.",
+        "Difficulty: Legendary; Game Speed: Normal.",
+        "Club teams only (International teams prohibited). Tactical defending mandatory."
+      ],
+      "prizes": {
+        "total_prize_pool_inr": 8000,
+        "breakdown": [
+          { "position": "Champion (1st)", "prize_inr": 5000, "reward": "Rs. 5,000 + Trophy" },
+          { "position": "Runner-up (2nd)", "prize_inr": 3000, "reward": "Rs. 3,000" }
+        ]
+      }
+    },
+    {
+      "event_number": 34,
+      "id": "00000000-0000-4000-8000-000000000402",
+      "name": "Valorant",
+      "category": "E_SPORTS",
+      "sub_category": "E-Sports",
+      "organizer": "TechXetra Gaming Guild",
+      "venue": "CSE LAN Centre",
+      "fest_day": 2,
+      "description": "5v5 competitive tactical shooter tournament on Mumbai servers. Coordinated execute plays, utility setups, and clutch fragging.",
+      "is_team_event": true,
+      "min_team_size": 5,
+      "max_team_size": 5,
+      "capacity": 32,
+      "registration": {
+        "registration_fee_inr": 300,
+        "fee_type": "Per team"
+      },
+      "rules": [
+        "Tournament Format: Single elimination knockout; Grand Finals are Best of 3 (BO3).",
+        "Map Pool: Ascent, Bind, Haven, Lotus, Split, Sunset, Abyss.",
+        "Cheating, scripting, or unauthorized third-party crosshairs will result in immediate squad ban."
+      ],
+      "prizes": {
+        "total_prize_pool_inr": 20000,
+        "breakdown": [
+          { "position": "Champions", "prize_inr": 13000, "reward": "Rs. 13,000 + Trophies" },
+          { "position": "Runners-up", "prize_inr": 7000, "reward": "Rs. 7,000" }
+        ]
+      }
+    },
+    {
+      "event_number": 35,
+      "id": "00000000-0000-4000-8000-000000000403",
+      "name": "BGMI",
+      "category": "E_SPORTS",
+      "sub_category": "E-Sports",
+      "organizer": "TechXetra Gaming Guild",
+      "venue": "Auditorium Annex",
+      "fest_day": 2,
+      "description": "Battlegrounds Mobile India 4-player squad survival tournament. 4 custom lobby matches across Erangel and Miramar. Points calculated via official BGIS placement and kill ratios.",
+      "is_team_event": true,
+      "min_team_size": 4,
+      "max_team_size": 4,
+      "capacity": 48,
+      "registration": {
+        "registration_fee_inr": 200,
+        "fee_type": "Per squad"
+      },
+      "rules": [
+        "Device: Mobile phones only. Emulators, iPads, triggers, and tablets are strictly banned.",
+        "Scoring System: Official 10-point BGIS placement table + 1 point per kill.",
+        "Room IDs and passwords distributed 15 minutes before match time."
+      ],
+      "prizes": {
+        "total_prize_pool_inr": 18000,
+        "breakdown": [
+          { "position": "1st Place (Chicken Dinner)", "prize_inr": 10000, "reward": "Rs. 10,000 + Trophy" },
+          { "position": "2nd Place", "prize_inr": 5000, "reward": "Rs. 5,000" },
+          { "position": "3rd Place", "prize_inr": 3000, "reward": "Rs. 3,000" }
+        ]
+      }
+    },
+    {
+      "event_number": 36,
+      "id": "00000000-0000-4000-8000-000000000404",
+      "name": "Real Cricket",
+      "category": "E_SPORTS",
+      "sub_category": "E-Sports",
+      "organizer": "TechXetra Gaming Guild",
+      "venue": "SAC Hall 2",
+      "fest_day": 3,
+      "description": "Real Cricket 24 1v1 mobile gaming faceoff. Fast 5-over quick matches testing shot timing, bowling field placements, and clutch death overs.",
+      "is_team_event": false,
+      "min_team_size": 1,
+      "max_team_size": 1,
+      "capacity": 32,
+      "registration": {
+        "registration_fee_inr": 50,
+        "fee_type": "Per player"
+      },
+      "prizes": {
+        "total_prize_pool_inr": 5000,
+        "breakdown": [
+          { "position": "1st Prize", "prize_inr": 3500, "reward": "Rs. 3,500 + Certificate" },
+          { "position": "2nd Prize", "prize_inr": 1500, "reward": "Rs. 1,500" }
+        ]
+      }
+    },
+    {
+      "event_number": 37,
+      "id": "00000000-0000-4000-8000-000000000501",
+      "name": "Illuminati: Motion Engineering",
+      "category": "SHOWCASE",
+      "sub_category": "Technical Showcase",
+      "organizer": "Department of Electronics & Communication",
+      "venue": "Dean's Amphitheatre",
+      "fest_day": 1,
+      "description": "Night-time synchronized laser, drone, and projection mapping light show demonstrating advanced kinetic motion control and embedded microcontroller choreography.",
+      "is_team_event": false,
+      "min_team_size": 1,
+      "max_team_size": 1,
+      "capacity": 800,
+      "registration": {
+        "registration_fee_inr": 0,
+        "fee_type": "Free Entry for all fest pass holders"
+      }
+    },
+    {
+      "event_number": 38,
+      "id": "00000000-0000-4000-8000-000000000502",
+      "name": "Robot Show",
+      "category": "SHOWCASE",
+      "sub_category": "Technical Showcase",
+      "organizer": "Robotics Club, Tezpur University",
+      "venue": "Central Lawn Arena",
+      "fest_day": 2,
+      "description": "Autonomous bipedal humanoid demonstrations, quadcopter drone swarms, and combat bot flame-spinner exhibitions.",
+      "is_team_event": false,
+      "min_team_size": 1,
+      "max_team_size": 1,
+      "capacity": 500,
+      "registration": {
+        "registration_fee_inr": 0,
+        "fee_type": "Free Entry for all fest pass holders"
+      }
+    },
+    {
+      "event_number": 39,
+      "id": "00000000-0000-4000-8000-000000000601",
+      "name": "Folk Dance (University Students)",
+      "category": "CULTURAL",
+      "sub_category": "Cultural Events",
+      "organizer": "Cultural Affairs Committee",
+      "venue": "KBR Auditorium",
+      "fest_day": 2,
+      "description": "Grand inter-college traditional folk dance extravaganza. Celebrating Assam's rich heritage including Bihu, Jhumur, Bagurumba, Sattriya, and traditional Northeast folk forms.",
+      "is_team_event": true,
+      "min_team_size": 6,
+      "max_team_size": 20,
+      "capacity": 20,
+      "registration": {
+        "registration_fee_inr": 300,
+        "fee_type": "Per team"
+      },
+      "rules": [
+        "Time limit: 8 to 12 minutes per performance.",
+        "Authentic traditional costumes and live or recorded folk instruments required.",
+        "Evaluated on choreography, synchronization, rhythm, and costume authenticity."
+      ],
+      "prizes": {
+        "total_prize_pool_inr": 18000,
+        "breakdown": [
+          { "position": "1st Prize", "prize_inr": 11000, "reward": "Rs. 11,000 + Trophy" },
+          { "position": "2nd Prize", "prize_inr": 7000, "reward": "Rs. 7,000 + Trophy" }
+        ]
+      }
+    },
+    {
+      "event_number": 40,
+      "id": "00000000-0000-4000-8000-000000000602",
+      "name": "Folk Orchestra (University Students)",
+      "category": "CULTURAL",
+      "sub_category": "Cultural Events",
+      "organizer": "Cultural Affairs Committee",
+      "venue": "KBR Auditorium",
+      "fest_day": 2,
+      "description": "Ensemble performance using indigenous acoustic instruments: Dhol, Pepa, Gagana, Tokari, flute, and traditional percussion arrangements.",
+      "is_team_event": true,
+      "min_team_size": 4,
+      "max_team_size": 15,
+      "capacity": 15,
+      "registration": {
+        "registration_fee_inr": 250,
+        "fee_type": "Per team"
+      },
+      "prizes": {
+        "total_prize_pool_inr": 12000,
+        "breakdown": [
+          { "position": "Best Ensemble (1st)", "prize_inr": 8000, "reward": "Rs. 8,000 + Trophy" },
+          { "position": "Runner-up (2nd)", "prize_inr": 4000, "reward": "Rs. 4,000" }
+        ]
+      }
+    },
+    {
+      "event_number": 41,
+      "id": "00000000-0000-4000-8000-000000000603",
+      "name": "Tribute to Zubeen Garg (Drama)",
+      "category": "CULTURAL",
+      "sub_category": "Cultural Events",
+      "organizer": "Drama Club, Tezpur University",
+      "venue": "Community Hall Stage",
+      "fest_day": 1,
+      "description": "Theatrical one-act drama and musical tribute celebrating the iconic music, lyrical impact, and social resonance of Assam's musical maestro Zubeen Garg.",
+      "is_team_event": true,
+      "min_team_size": 4,
+      "max_team_size": 20,
+      "capacity": 15,
+      "registration": {
+        "registration_fee_inr": 300,
+        "fee_type": "Per team"
+      },
+      "prizes": {
+        "total_prize_pool_inr": 15000,
+        "breakdown": [
+          { "position": "Best Production", "prize_inr": 10000, "reward": "Rs. 10,000 + Trophy" },
+          { "position": "Runner-up", "prize_inr": 5000, "reward": "Rs. 5,000" }
+        ]
+      }
+    },
+    {
+      "event_number": 42,
+      "id": "00000000-0000-4000-8000-000000000604",
+      "name": "Unplugged Session",
+      "category": "CULTURAL",
+      "sub_category": "Cultural Events",
+      "venue": "Amphitheatre Courtyard",
+      "fest_day": 1,
+      "description": "Intimate acoustic vocal competition under the stars. Solo singers and duos performing acoustic ballads with acoustic guitar, cajon, or keyboard.",
+      "is_team_event": true,
+      "min_team_size": 1,
+      "max_team_size": 2,
+      "capacity": 30,
+      "registration": {
+        "registration_fee_inr": 100,
+        "fee_type": "Per entry"
+      },
+      "prizes": {
+        "total_prize_pool_inr": 8000,
+        "breakdown": [
+          { "position": "1st Prize", "prize_inr": 5000, "reward": "Rs. 5,000 + Trophy" },
+          { "position": "2nd Prize", "prize_inr": 3000, "reward": "Rs. 3,000" }
+        ]
+      }
+    },
+    {
+      "event_number": 43,
+      "id": "00000000-0000-4000-8000-000000000605",
+      "name": "Mob Showdown",
+      "category": "CULTURAL",
+      "sub_category": "Cultural Events",
+      "venue": "Central Lawn Quadrangle",
+      "fest_day": 3,
+      "description": "The mega street dance and flash mob showdown. Crews clash in high-energy hip-hop, locking, popping, and urban breaking routines.",
+      "is_team_event": true,
+      "min_team_size": 8,
+      "max_team_size": 25,
+      "capacity": 15,
+      "registration": {
+        "registration_fee_inr": 400,
+        "fee_type": "Per crew"
+      },
+      "prizes": {
+        "total_prize_pool_inr": 20000,
+        "breakdown": [
+          { "position": "Champion Crew", "prize_inr": 13000, "reward": "Rs. 13,000 + Trophy" },
+          { "position": "Runner-up Crew", "prize_inr": 7000, "reward": "Rs. 7,000" }
+        ]
+      }
+    },
+    {
+      "event_number": 44,
+      "id": "00000000-0000-4000-8000-000000000606",
+      "name": "Battle of Bands: Rock & Metal",
+      "category": "CULTURAL",
+      "sub_category": "Cultural Events",
+      "organizer": "TechXetra Music Society",
+      "venue": "Main Concert Stage",
+      "fest_day": 3,
+      "description": "The national flagship rock and metal battle. Top college and independent bands compete for the crown with thunderous guitar riffs, original compositions, and electrifying stage presence.",
+      "is_team_event": true,
+      "min_team_size": 3,
+      "max_team_size": 8,
+      "capacity": 16,
+      "registration": {
+        "registration_fee_inr": 500,
+        "fee_type": "Per band"
+      },
+      "rules": [
+        "Time slot: 20 minutes (including 5 minutes soundcheck).",
+        "Must perform at least one original composition and one cover song.",
+        "Full drum kit, monitors, and bass amp provided; personal guitars and pedals required."
+      ],
+      "prizes": {
+        "total_prize_pool_inr": 35000,
+        "breakdown": [
+          { "position": "Winner (1st)", "prize_inr": 20000, "reward": "Rs. 20,000 + Trophy + Opening slot for Pronite" },
+          { "position": "Runner-up (2nd)", "prize_inr": 10000, "reward": "Rs. 10,000 + Trophy" },
+          { "position": "Best Guitarist / Vocalist", "prize_inr": 5000, "reward": "Rs. 5,000" }
+        ]
+      }
+    },
+    {
+      "event_number": 45,
+      "id": "00000000-0000-4000-8000-000000000607",
+      "name": "Alumni Performance",
+      "category": "CULTURAL",
+      "sub_category": "Cultural Events",
+      "venue": "Amphitheatre",
+      "fest_day": 2,
+      "description": "Special musical and nostalgic performance by distinguished Tezpur University alumni artists welcoming delegates back to campus.",
+      "is_team_event": false,
+      "min_team_size": 1,
+      "max_team_size": 1,
+      "capacity": 400,
+      "registration": {
+        "registration_fee_inr": 0,
+        "fee_type": "Free Entry"
+      }
+    },
+    {
+      "event_number": 46,
+      "id": "00000000-0000-4000-8000-000000000608",
+      "name": "Creative Dance",
+      "category": "CULTURAL",
+      "sub_category": "Cultural Events",
+      "venue": "KBR Auditorium",
+      "fest_day": 3,
+      "description": "Solo contemporary, lyrical, classical fusion, and thematic dance competition. Evaluated on emotional expression, technique, rhythm, and stage aesthetics.",
+      "is_team_event": false,
+      "min_team_size": 1,
+      "max_team_size": 1,
+      "capacity": 30,
+      "registration": {
+        "registration_fee_inr": 100,
+        "fee_type": "Per contestant"
+      },
+      "prizes": {
+        "total_prize_pool_inr": 8000,
+        "breakdown": [
+          { "position": "1st Prize", "prize_inr": 5000, "reward": "Rs. 5,000 + Trophy" },
+          { "position": "2nd Prize", "prize_inr": 3000, "reward": "Rs. 3,000" }
+        ]
+      }
+    }
+  ],
+  "users": [
+    {
+      "id": "10000000-0000-4000-8000-000000000001",
+      "name": "Jamilur Rahman",
+      "email": "jamilur@tezpur.ac.in",
+      "phone": "9957845476",
+      "is_student": true,
+      "role": "LEAD"
+    },
+    {
+      "id": "10000000-0000-4000-8000-000000000002",
+      "name": "Rim Baruah",
+      "email": "rim@tezpur.ac.in",
+      "phone": "8486237022",
+      "is_student": true,
+      "role": "LEAD"
+    },
+    {
+      "id": "10000000-0000-4000-8000-000000000003",
+      "name": "Partha Pratim Das",
+      "email": "partha@tezpur.ac.in",
+      "phone": "6001853929",
+      "is_student": true,
+      "role": "LEAD"
+    },
+    {
+      "id": "10000000-0000-4000-8000-000000000004",
+      "name": "Yash Sharma",
+      "email": "yash@tezpur.ac.in",
+      "phone": "9876543210",
+      "is_student": true,
+      "role": "LEAD"
+    },
+    {
+      "id": "10000000-0000-4000-8000-000000000005",
+      "name": "Kritika Talukdar",
+      "email": "kritika@tezpur.ac.in",
+      "phone": "9123456780",
+      "is_student": true,
+      "role": "LEAD"
+    },
+    {
+      "id": "10000000-0000-4000-8000-000000000006",
+      "name": "Bavrawee Phukan",
+      "email": "bavrawee@tezpur.ac.in",
+      "phone": "9435012345",
+      "is_student": true,
+      "role": "LEAD"
+    },
+    {
+      "id": "10000000-0000-4000-8000-000000000007",
+      "name": "Shujan Mashuq Islam",
+      "email": "csb24067@tezpur.ac.in",
+      "phone": "9864098765",
+      "is_student": true,
+      "role": "LEAD"
+    }
+  ],
+  "event_staff": [
+    {
+      "user_id": "10000000-0000-4000-8000-000000000001",
+      "event_id": "00000000-0000-4000-8000-000000000105",
+      "staff_role": "LEAD"
+    },
+    {
+      "user_id": "10000000-0000-4000-8000-000000000002",
+      "event_id": "00000000-0000-4000-8000-000000000105",
+      "staff_role": "LEAD"
+    },
+    {
+      "user_id": "10000000-0000-4000-8000-000000000003",
+      "event_id": "00000000-0000-4000-8000-000000000105",
+      "staff_role": "VOLUNTEER"
+    },
+    {
+      "user_id": "10000000-0000-4000-8000-000000000003",
+      "event_id": "00000000-0000-4000-8000-000000000109",
+      "staff_role": "LEAD"
+    },
+    {
+      "user_id": "10000000-0000-4000-8000-000000000004",
+      "event_id": "00000000-0000-4000-8000-000000000109",
+      "staff_role": "LEAD"
+    },
+    {
+      "user_id": "10000000-0000-4000-8000-000000000005",
+      "event_id": "00000000-0000-4000-8000-000000000112",
+      "staff_role": "LEAD"
+    },
+    {
+      "user_id": "10000000-0000-4000-8000-000000000006",
+      "event_id": "00000000-0000-4000-8000-000000000112",
+      "staff_role": "LEAD"
+    },
+    {
+      "user_id": "10000000-0000-4000-8000-000000000007",
+      "event_id": "00000000-0000-4000-8000-000000000101",
+      "staff_role": "LEAD"
+    }
+  ]
+}

@@ -7,6 +7,8 @@ import { requestIdMiddleware } from './middleware/request-id';
 import { csrfProtection } from './middleware/csrf';
 import { errorHandler } from './middleware/error-handler';
 import { healthRouter } from './routes/health';
+import { authRouter } from './routes/auth';
+import { meRouter } from './routes/me';
 import { sendError } from './common/response';
 
 export const app: Express = express();
@@ -45,9 +47,15 @@ app.use(requestIdMiddleware);
 // CSRF mutation origin check
 app.use(csrfProtection);
 
-// Mount health and readiness routes at root and API prefix
+// Mount health & readiness
 app.use(healthRouter);
 app.use('/api/v1', healthRouter);
+
+// Mount Auth and Me routes under both /api/v1 and root prefixes
+app.use('/api/v1', authRouter);
+app.use('/api/v1', meRouter);
+app.use(authRouter);
+app.use(meRouter);
 
 // 404 Not Found handler for unmatched routes
 app.use((req: Request, res: Response) => {

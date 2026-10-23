@@ -17,7 +17,7 @@ export const adminPaymentsRouter = Router();
 
 const reviewDecisionSchema = z
   .object({
-    decision: z.enum(['APPROVE', 'APPROVED', 'REJECT', 'REJECTED', 'HOLD', 'ON_HOLD']),
+    decision: z.enum(['APPROVE', 'APPROVED', 'REJECT', 'REJECTED', 'HOLD', 'ON_HOLD', 'UNHOLD']),
     reasonCode: z.string().optional(),
     rejectionReason: z.string().optional(),
     internalNote: z.string().optional(),

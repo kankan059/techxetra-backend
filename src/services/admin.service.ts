@@ -1,4 +1,4 @@
-import { eq, and, sql, ilike, or, count, desc, inArray, sum } from 'drizzle-orm';
+import { eq, and, sql, ilike, or, count, desc, inArray, isNull, sum } from 'drizzle-orm';
 import { db } from '../db';
 import {
   users,
@@ -71,7 +71,33 @@ export async function listUsers(query: {
     .limit(pageSize)
     .offset(offset);
 
-  return { users: userList, page, pageSize, total };
+  const userIds = userList.map((u) => u.id);
+  const assignmentRows =
+    userIds.length > 0
+      ? await db
+          .select({
+            userId: eventStaff.userId,
+            eventId: eventStaff.eventId,
+            eventTitle: events.title,
+            role: eventStaff.role,
+          })
+          .from(eventStaff)
+          .innerJoin(events, eq(eventStaff.eventId, events.id))
+          .where(and(inArray(eventStaff.userId, userIds), isNull(eventStaff.revokedAt)))
+      : [];
+
+  const usersWithAssignments = userList.map((u) => ({
+    ...u,
+    event_staff_assignments: assignmentRows
+      .filter((a) => a.userId === u.id)
+      .map((a) => ({
+        event_id: a.eventId,
+        event_title: a.eventTitle,
+        role: a.role,
+      })),
+  }));
+
+  return { users: usersWithAssignments, page, pageSize, total };
 }
 
 export async function updateUserAdmin(

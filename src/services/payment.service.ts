@@ -332,7 +332,7 @@ export async function withdrawPaymentSubmission(purchaseId: string, buyerId: str
 }
 
 export interface ReviewDecisionInput {
-  decision: 'APPROVE' | 'APPROVED' | 'REJECT' | 'REJECTED' | 'HOLD' | 'ON_HOLD';
+  decision: 'APPROVE' | 'APPROVED' | 'REJECT' | 'REJECTED' | 'HOLD' | 'ON_HOLD' | 'UNHOLD';
   reasonCode?: string;
   rejectionReason?: string;
   internalNote?: string;
@@ -510,6 +510,27 @@ export async function reviewPaymentSubmission(
         requestId,
         createdAt: now,
       });
+          } else if (normalizedDecision === 'UNHOLD') {
+      if (payment.status !== 'ON_HOLD') {
+        throw AppError.conflict('Payment is not on hold', 'PAYMENT_NOT_ON_HOLD');
+      }
+
+      await tx
+        .update(payments)
+        .set({ status: 'SUBMITTED', updatedAt: now })
+        .where(eq(payments.id, payment.id));
+
+      await tx.insert(paymentAuditLogs).values({
+        paymentId: payment.id,
+        actorId: reviewer.id,
+        fromStatus: payment.status,
+        toStatus: 'SUBMITTED',
+        decision: 'UNHOLD',
+        reasonCode,
+        notes: privateNote,
+        requestId,
+        createdAt: now,
+      });
     } else if (normalizedDecision === 'REJECT' || normalizedDecision === 'REJECTED') {
       // 6. Decision: REJECT
       await tx
@@ -575,7 +596,14 @@ export async function reviewPaymentSubmission(
   return {
     paymentId,
     decision: normalizedDecision,
-    status: normalizedDecision === 'APPROVE' ? 'APPROVED' : normalizedDecision === 'HOLD' ? 'ON_HOLD' : 'REJECTED',
+    status:
+      normalizedDecision === 'APPROVE' || normalizedDecision === 'APPROVED'
+        ? 'APPROVED'
+        : normalizedDecision === 'HOLD' || normalizedDecision === 'ON_HOLD'
+          ? 'ON_HOLD'
+          : normalizedDecision === 'UNHOLD'
+            ? 'SUBMITTED'
+            : 'REJECTED',
     reviewedAt: now,
   };
 }

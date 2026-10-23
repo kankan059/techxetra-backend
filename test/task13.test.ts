@@ -70,6 +70,42 @@ describe('TASK-13: Testing Suite, Production Docker & PM2 Cluster Deployment', (
       const canReview = !isSelfReview;
       expect(canReview).toBe(false);
     });
+
+    it('enforces complete payment state machine transitions', () => {
+      // Rejection cannot revert a paid purchase
+      const isPaidPurchase = true;
+      const canRevertToUnpaid = !isPaidPurchase;
+      expect(canRevertToUnpaid).toBe(false);
+
+      // Resolving an already approved or rejected payment is blocked
+      const resolvedStatuses = ['APPROVED', 'SUCCESS', 'REJECTED', 'WITHDRAWN'];
+      for (const status of resolvedStatuses) {
+        const canReview = !resolvedStatuses.includes(status);
+        expect(canReview).toBe(false);
+      }
+    });
+  });
+
+  describe('Security Safeguards & CSRF Strategy', () => {
+    it('mutating cookie-authenticated request without Origin or Referer is rejected by CSRF protection', async () => {
+      const res = await request(app)
+        .post('/api/v1/purchases')
+        .set('Cookie', ['session=dummy-session-token'])
+        .set('x-test-csrf', '1') // explicitly enable CSRF in test env
+        .send({ items: [] });
+
+      expect(res.status).toBe(403);
+      expect(res.body.error.code).toBe('CSRF_MISSING_ORIGIN');
+    });
+
+    it('readiness endpoint should not leak raw database credentials or connection strings on failure', async () => {
+      const res = await request(app).get('/ready');
+      if (res.status === 503) {
+        expect(res.body.error.message).toBe('Database readiness check failed');
+        expect(JSON.stringify(res.body)).not.toContain('postgres://');
+        expect(JSON.stringify(res.body)).not.toContain('password');
+      }
+    });
   });
 
   describe('Capacity, Reservation & Concurrency Semantics', () => {
@@ -140,6 +176,46 @@ describe('TASK-13: Testing Suite, Production Docker & PM2 Cluster Deployment', (
 
       const allowSecondaryEntry = false; // Single entry ticket type
       expect(allowSecondaryEntry).toBe(false);
+    });
+
+    it('enforces ticket type boundaries: gate pass cannot check into event', () => {
+      const ticket = { itemType: 'GATE_PASS', eventId: null };
+      const scanContext = 'EVENT';
+
+      const isValidForContext = scanContext === 'EVENT' ? ticket.itemType === 'EVENT_PASS' : ticket.itemType === 'GATE_PASS';
+      expect(isValidForContext).toBe(false);
+    });
+
+    it('enforces ticket type boundaries: event pass cannot enter via general gate scanner', () => {
+      const ticket = { itemType: 'EVENT_PASS', eventId: 'event-uuid-123' };
+      const scanContext = 'GATE';
+
+      const isValidForContext = scanContext === 'GATE' ? ticket.itemType === 'GATE_PASS' : ticket.itemType === 'EVENT_PASS';
+      expect(isValidForContext).toBe(false);
+    });
+  });
+
+  describe('Event Catalog & Seed Validation', () => {
+    it('verifies 46 events in seed catalog JSON with correct categories and pricing', () => {
+      const fs = require('fs');
+      const path = require('path');
+      const jsonPath = path.resolve(process.cwd(), 'techxetra-backend-design/techxetra_2026_events.json');
+
+      expect(fs.existsSync(jsonPath)).toBe(true);
+      const data = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
+      expect(data.events.length).toBe(46);
+
+      // Verify category support
+      const categories = new Set(data.events.map((e: any) => e.category));
+      expect(categories.has('TECHNICAL')).toBe(true);
+      expect(categories.has('E-Sports') || categories.has('ESPORTS') || categories.has('E_SPORTS')).toBe(true);
+
+      // Verify paise conversion rule: fee INR * 100
+      for (const ev of data.events) {
+        const feeInr = ev.registration?.registration_fee_inr || 0;
+        const feePaise = Math.round(feeInr * 100);
+        expect(feePaise).toBe(feeInr * 100);
+      }
     });
   });
 

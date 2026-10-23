@@ -516,6 +516,9 @@ export const tickets = pgTable(
   (table) => [
     index('idx_tickets_beneficiary_id').on(table.beneficiaryId),
     index('idx_tickets_event_id').on(table.eventId),
+    uniqueIndex('idx_tickets_gate_pass_unique')
+      .on(table.purchaseItemId)
+      .where(sql`${table.itemType} = 'GATE_PASS'`),
   ]
 );
 

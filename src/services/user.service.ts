@@ -5,41 +5,47 @@ import type { UserSelect } from '../types/express';
 
 /**
  * Atomically generates the next sequential user ID in the format TX26XXXX.
- * Utilizes a PostgreSQL sequence with a synchronization fallback.
+ * Utilizes a PostgreSQL sequence protected by a transaction-scoped advisory lock
+ * to eliminate all race conditions under concurrent signups.
  */
 export async function generateNextUserId(): Promise<string> {
-  // Ensure the PostgreSQL sequence exists
-  await db.execute(sql`
-    CREATE SEQUENCE IF NOT EXISTS user_id_seq START WITH 1 INCREMENT BY 1;
-  `);
+  return await db.transaction(async (tx) => {
+    // Concurrency lock: serialize ID allocation across all concurrent worker processes
+    await tx.execute(sql`SELECT pg_advisory_xact_lock(7429182)`);
 
-  // Query nextval
-  const result = await db.execute<{ nextval: string }>(sql`
-    SELECT nextval('user_id_seq') AS nextval;
-  `);
+    // Ensure sequence exists
+    await tx.execute(sql`
+      CREATE SEQUENCE IF NOT EXISTS user_id_seq START WITH 1 INCREMENT BY 1;
+    `);
 
-  let nextNum = 1;
-  if (result.rows.length > 0 && result.rows[0].nextval) {
-    nextNum = parseInt(String(result.rows[0].nextval), 10);
-  }
+    // Check maximum existing ID
+    const maxResult = await tx.execute<{ max_id: string }>(sql`
+      SELECT id AS max_id FROM users WHERE id LIKE 'TX26%' ORDER BY id DESC LIMIT 1
+    `);
 
-  // Fallback check against existing max ID in database
-  const maxResult = await db.execute<{ id: string }>(sql`
-    SELECT id FROM users WHERE id LIKE 'TX26%' ORDER BY id DESC LIMIT 1
-  `);
+    let existingMax = 0;
+    if (maxResult.rows.length > 0 && maxResult.rows[0].max_id) {
+      const parsed = parseInt(maxResult.rows[0].max_id.replace(/^TX26/, ''), 10);
+      if (!isNaN(parsed)) {
+        existingMax = parsed;
+      }
+    }
 
-  if (maxResult.rows.length > 0 && maxResult.rows[0].id) {
-    const existingNum = parseInt(maxResult.rows[0].id.replace(/^TX26/, ''), 10);
-    if (!isNaN(existingNum) && nextNum <= existingNum) {
-      nextNum = existingNum + 1;
-      // Resynchronize sequence
-      await db.execute(sql`
+    const seqResult = await tx.execute<{ nextval: string }>(sql`
+      SELECT nextval('user_id_seq') AS nextval;
+    `);
+
+    let nextNum = parseInt(String(seqResult.rows[0].nextval), 10);
+
+    if (nextNum <= existingMax) {
+      nextNum = existingMax + 1;
+      await tx.execute(sql`
         SELECT setval('user_id_seq', ${nextNum});
       `);
     }
-  }
 
-  return `TX26${String(nextNum).padStart(4, '0')}`;
+    return `TX26${String(nextNum).padStart(4, '0')}`;
+  });
 }
 
 /**

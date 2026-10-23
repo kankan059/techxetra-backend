@@ -21,6 +21,7 @@ import {
 import { verifyGoogleIdToken, resolveGoogleUser } from '../services/google-auth.service';
 import { validate } from '../middleware/validate';
 import { optionalAuth } from '../middleware/auth';
+import { authRateLimiter } from '../middleware/rate-limiter';
 
 export const authRouter = Router();
 
@@ -50,6 +51,7 @@ const googleSchema = z
 // 1. POST /auth/register
 authRouter.post(
   '/auth/register',
+  authRateLimiter,
   validate({ body: registerSchema }),
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
@@ -104,6 +106,7 @@ authRouter.post(
 // 2. POST /auth/login
 authRouter.post(
   '/auth/login',
+  authRateLimiter,
   validate({ body: loginSchema }),
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
@@ -138,6 +141,7 @@ authRouter.post(
 // 3. POST /auth/google
 authRouter.post(
   '/auth/google',
+  authRateLimiter,
   validate({ body: googleSchema }),
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {

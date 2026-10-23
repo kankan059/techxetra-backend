@@ -216,9 +216,18 @@ export async function preScanLookup(staffUser: UserSelect, input: ScanContextInp
     };
   }
 
-  // 5. Event check-in eligibility
+  // 5. Context & Ticket Type Invariant enforcement
   if (context === 'EVENT') {
-    if (ticket.eventId && eventId && ticket.eventId !== eventId) {
+    // Gate pass cannot be used for event admission
+    if (ticket.itemType !== 'EVENT_PASS') {
+      return {
+        canAdmit: false,
+        outcome: 'WRONG_EVENT',
+        reason: 'Gate pass cannot be used for event admission. Event Pass required.',
+      };
+    }
+
+    if (!ticket.eventId || (eventId && ticket.eventId !== eventId)) {
       return {
         canAdmit: false,
         outcome: 'WRONG_EVENT',
@@ -232,6 +241,15 @@ export async function preScanLookup(staffUser: UserSelect, input: ScanContextInp
         outcome: 'ALREADY_USED',
         reason: 'Attendee has already been checked into this event',
         checkedInAt: ticket.eventCheckedInAt,
+      };
+    }
+  } else if (context === 'GATE') {
+    // Event pass cannot be scanned as a gate pass
+    if (ticket.itemType !== 'GATE_PASS') {
+      return {
+        canAdmit: false,
+        outcome: 'INVALID',
+        reason: 'Only Gate Passes can be admitted through venue perimeter gates.',
       };
     }
   }
@@ -349,6 +367,37 @@ export async function executeAdmission(staffUser: UserSelect, input: ScanContext
       throw AppError.badRequest('QR code version expired', 'TICKET_INVALID');
     }
 
+    // Time validity enforcement
+    if (ticket.validFrom && now < ticket.validFrom) {
+      await tx.insert(checkInLogs).values({
+        ticketId: ticket.id,
+        scannedBy: staffUser.id,
+        context,
+        eventId: eventId ?? ticket.eventId,
+        verdict: 'DENIED',
+        outcome: 'NOT_YET_VALID',
+        notes: 'Ticket validity window has not started yet',
+        deviceId,
+        createdAt: now,
+      });
+      throw AppError.badRequest('Ticket validity window has not started yet', 'NOT_YET_VALID');
+    }
+
+    if (ticket.validTo && now > ticket.validTo) {
+      await tx.insert(checkInLogs).values({
+        ticketId: ticket.id,
+        scannedBy: staffUser.id,
+        context,
+        eventId: eventId ?? ticket.eventId,
+        verdict: 'DENIED',
+        outcome: 'INVALID',
+        notes: 'Ticket validity window has expired',
+        deviceId,
+        createdAt: now,
+      });
+      throw AppError.badRequest('Ticket validity window has expired', 'TICKET_EXPIRED');
+    }
+
     // Student ID Check Enforcement
     if (ticket.tier === 'STUDENT' && !studentIdChecked) {
       throw AppError.badRequest(
@@ -358,7 +407,23 @@ export async function executeAdmission(staffUser: UserSelect, input: ScanContext
     }
 
     if (context === 'EVENT') {
-      if (ticket.eventId && eventId && ticket.eventId !== eventId) {
+      // Gate pass cannot be used for event admission
+      if (ticket.itemType !== 'EVENT_PASS') {
+        await tx.insert(checkInLogs).values({
+          ticketId: ticket.id,
+          scannedBy: staffUser.id,
+          context: 'EVENT',
+          eventId,
+          verdict: 'DENIED',
+          outcome: 'WRONG_EVENT',
+          notes: 'Gate pass cannot be used for event check-in',
+          deviceId,
+          createdAt: now,
+        });
+        throw AppError.badRequest('Gate pass cannot be used for event check-in. Event Pass required.', 'WRONG_EVENT');
+      }
+
+      if (!ticket.eventId || (eventId && ticket.eventId !== eventId)) {
         await tx.insert(checkInLogs).values({
           ticketId: ticket.id,
           scannedBy: staffUser.id,
@@ -398,6 +463,21 @@ export async function executeAdmission(staffUser: UserSelect, input: ScanContext
           updatedAt: now,
         })
         .where(eq(tickets.id, ticket.id));
+    } else if (context === 'GATE') {
+      if (ticket.itemType !== 'GATE_PASS') {
+        await tx.insert(checkInLogs).values({
+          ticketId: ticket.id,
+          scannedBy: staffUser.id,
+          context: 'GATE',
+          eventId: null,
+          verdict: 'DENIED',
+          outcome: 'INVALID',
+          notes: 'Only Gate Passes can be admitted through venue gates',
+          deviceId,
+          createdAt: now,
+        });
+        throw AppError.badRequest('Ticket is not a valid Gate Pass', 'INVALID_TICKET_TYPE');
+      }
     }
 
     // Insert admission log

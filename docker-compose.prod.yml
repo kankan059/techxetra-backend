@@ -28,7 +28,8 @@ services:
       DATABASE_URL: postgresql://${POSTGRES_USER:-techxetra}:${POSTGRES_PASSWORD:-techxetra_password}@postgres:5432/${POSTGRES_DB:-techxetra_db}
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-dummy_google_client_id}
       FRONTEND_ORIGIN: ${FRONTEND_ORIGIN:-http://localhost:3000}
-      TICKET_HMAC_SECRET: ${TICKET_HMAC_SECRET:-secret_hmac_key_for_testing_purposes_only_32_bytes}
+      TICKET_HMAC_SECRET: ${TICKET_HMAC_SECRET:?TICKET_HMAC_SECRET must be set}
+      SESSION_SECRET: ${SESSION_SECRET:?SESSION_SECRET must be set}
       UPI_VPA: ${UPI_VPA:-techxetra@upi}
       UPI_PAYEE_NAME: ${UPI_PAYEE_NAME:-TechXetra Tezpur University}
 

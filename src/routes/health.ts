@@ -21,12 +21,12 @@ healthRouter.get('/ready', async (req: Request, res: Response) => {
       database: 'connected',
     });
   } catch (err: any) {
+    // Avoid exposing database connection strings, credentials, or internal details in public responses
     sendError(
       res,
       'SERVICE_UNAVAILABLE',
       'Database readiness check failed',
-      503,
-      [{ message: err?.message || 'Database connection error' }]
+      503
     );
   }
 });

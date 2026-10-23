@@ -10,6 +10,8 @@ import {
   teamMembers,
   users,
   tickets,
+  festDays,
+  events,
 } from '../db/schema';
 import { env } from '../config/env';
 import { AppError } from '../common/errors';
@@ -21,85 +23,149 @@ import type { UserSelect } from '../types/express';
  * Idempotently issues digital tickets for all confirmed registrations in a paid purchase.
  */
 export async function fulfillTicketsForPurchase(purchaseId: string): Promise<number> {
-  const [purchase] = await db.select().from(purchases).where(eq(purchases.id, purchaseId)).limit(1);
-  if (!purchase || purchase.status !== 'PAID') {
-    throw AppError.badRequest('Tickets can only be fulfilled for purchases in PAID status');
-  }
-
-  const items = await db.select().from(purchaseItems).where(eq(purchaseItems.purchaseId, purchaseId));
-  const now = Date.now();
-  let createdCount = 0;
-
-  for (const item of items) {
-    if (item.itemType === 'GATE_PASS') {
-      // Check if ticket already exists for this gate pass item
-      const [existingTicket] = await db
-        .select()
-        .from(tickets)
-        .where(eq(tickets.purchaseItemId, item.id))
-        .limit(1);
-
-      if (!existingTicket) {
-        await db.insert(tickets).values({
-          publicId: generateTicketPublicId(),
-          purchaseItemId: item.id,
-          beneficiaryId: item.beneficiaryId || purchase.buyerId,
-          itemType: 'GATE_PASS',
-          tier: item.tier,
-          status: 'ACTIVE',
-          qrVersion: 1,
-          createdAt: now,
-          updatedAt: now,
-        });
-        createdCount++;
-      }
-      continue;
-    }
-
-    // EVENT_PASS
-    const itemRegistrations = await db
+  return await db.transaction(async (tx) => {
+    // 1. Lock purchase row for update
+    const [purchase] = await tx
       .select()
-      .from(registrations)
-      .where(and(eq(registrations.purchaseItemId, item.id), eq(registrations.status, 'CONFIRMED')));
+      .from(purchases)
+      .where(eq(purchases.id, purchaseId))
+      .for('update');
 
-    for (const reg of itemRegistrations) {
-      // Check if ticket already exists for this registration
-      const [existingTicket] = await db
+    if (!purchase || purchase.status !== 'PAID') {
+      throw AppError.badRequest('Tickets can only be fulfilled for purchases in PAID status');
+    }
+
+    // If already complete, return early
+    if (purchase.fulfillmentStatus === 'COMPLETE') {
+      const existingCount = await tx
         .select()
         .from(tickets)
-        .where(eq(tickets.registrationId, reg.id))
-        .limit(1);
-
-      if (!existingTicket) {
-        await db.insert(tickets).values({
-          publicId: generateTicketPublicId(),
-          purchaseItemId: item.id,
-          registrationId: reg.id,
-          beneficiaryId: reg.participantId,
-          itemType: 'EVENT_PASS',
-          eventId: reg.eventId,
-          tier: item.tier,
-          status: 'ACTIVE',
-          qrVersion: 1,
-          createdAt: now,
-          updatedAt: now,
-        });
-        createdCount++;
+        .innerJoin(purchaseItems, eq(tickets.purchaseItemId, purchaseItems.id))
+        .where(eq(purchaseItems.purchaseId, purchaseId));
+      if (existingCount.length > 0) {
+        return 0;
       }
     }
-  }
 
-  // Mark fulfillment complete
-  await db
-    .update(purchases)
-    .set({
-      fulfillmentStatus: 'COMPLETE',
-      fulfillmentLastError: null,
-      updatedAt: now,
-    })
-    .where(eq(purchases.id, purchaseId));
+    const allFestDays = await tx.select().from(festDays);
+    const minFestStart =
+      allFestDays.length > 0 ? Math.min(...allFestDays.map((d) => d.validFrom)) : Date.now();
+    const maxFestEnd =
+      allFestDays.length > 0
+        ? Math.max(...allFestDays.map((d) => d.validTo))
+        : Date.now() + 3 * 86400000;
+    const festDayMap = new Map(allFestDays.map((d) => [d.dayNumber, d]));
 
-  return createdCount;
+    const items = await tx
+      .select()
+      .from(purchaseItems)
+      .where(eq(purchaseItems.purchaseId, purchaseId));
+    const now = Date.now();
+    let createdCount = 0;
+
+    for (const item of items) {
+      if (item.itemType === 'GATE_PASS') {
+        const [existingTicket] = await tx
+          .select()
+          .from(tickets)
+          .where(
+            and(eq(tickets.purchaseItemId, item.id), eq(tickets.itemType, 'GATE_PASS'))
+          )
+          .limit(1);
+
+        if (!existingTicket) {
+          try {
+            await tx.insert(tickets).values({
+              publicId: generateTicketPublicId(),
+              purchaseItemId: item.id,
+              beneficiaryId: item.beneficiaryId || purchase.buyerId,
+              itemType: 'GATE_PASS',
+              tier: item.tier,
+              status: 'ACTIVE',
+              qrVersion: 1,
+              validFrom: minFestStart,
+              validTo: maxFestEnd,
+              createdAt: now,
+              updatedAt: now,
+            });
+            createdCount++;
+          } catch (err: any) {
+            // Concurrency-safe: ignore duplicate key violations on retries
+            if (err?.code !== '23505') throw err;
+          }
+        }
+        continue;
+      }
+
+      // EVENT_PASS
+      const itemRegistrations = await tx
+        .select()
+        .from(registrations)
+        .where(
+          and(
+            eq(registrations.purchaseItemId, item.id),
+            eq(registrations.status, 'CONFIRMED')
+          )
+        );
+
+      let eventValidFrom = minFestStart;
+      let eventValidTo = maxFestEnd;
+      if (item.eventId) {
+        const [ev] = await tx
+          .select()
+          .from(events)
+          .where(eq(events.id, item.eventId))
+          .limit(1);
+        if (ev && ev.festDay && festDayMap.has(ev.festDay)) {
+          const fd = festDayMap.get(ev.festDay)!;
+          eventValidFrom = fd.validFrom;
+          eventValidTo = fd.validTo;
+        }
+      }
+
+      for (const reg of itemRegistrations) {
+        const [existingTicket] = await tx
+          .select()
+          .from(tickets)
+          .where(eq(tickets.registrationId, reg.id))
+          .limit(1);
+
+        if (!existingTicket) {
+          try {
+            await tx.insert(tickets).values({
+              publicId: generateTicketPublicId(),
+              purchaseItemId: item.id,
+              registrationId: reg.id,
+              beneficiaryId: reg.participantId,
+              itemType: 'EVENT_PASS',
+              eventId: reg.eventId,
+              tier: item.tier,
+              status: 'ACTIVE',
+              qrVersion: 1,
+              validFrom: eventValidFrom,
+              validTo: eventValidTo,
+              createdAt: now,
+              updatedAt: now,
+            });
+            createdCount++;
+          } catch (err: any) {
+            if (err?.code !== '23505') throw err;
+          }
+        }
+      }
+    }
+
+    await tx
+      .update(purchases)
+      .set({
+        fulfillmentStatus: 'COMPLETE',
+        fulfillmentLastError: null,
+        updatedAt: now,
+      })
+      .where(eq(purchases.id, purchaseId));
+
+    return createdCount;
+  });
 }
 
 /**
@@ -322,12 +388,27 @@ export async function reviewPaymentSubmission(
       );
     }
 
+    // Payment state validation: cannot review already resolved or withdrawn payments
+    if (payment.status === 'APPROVED' || payment.status === 'SUCCESS') {
+      throw AppError.conflict('Payment has already been approved', 'PAYMENT_ALREADY_RESOLVED');
+    }
+    if (payment.status === 'REJECTED') {
+      throw AppError.conflict('Payment has already been rejected', 'PAYMENT_ALREADY_RESOLVED');
+    }
+    if (payment.status === 'WITHDRAWN') {
+      throw AppError.conflict('Payment was withdrawn by the submitter', 'PAYMENT_WITHDRAWN');
+    }
+
+    // Purchase state validation: a paid purchase must NEVER revert or be altered by review
+    if (purchase.status === 'PAID') {
+      throw AppError.conflict('Associated purchase has already been marked PAID', 'PURCHASE_ALREADY_PAID');
+    }
+    if (purchase.status === 'CANCELLED' || purchase.status === 'EXPIRED') {
+      throw AppError.conflict('Associated purchase is no longer active', 'PURCHASE_NOT_ACTIVE');
+    }
+
     // 4. Decision: APPROVE
     if (normalizedDecision === 'APPROVE' || normalizedDecision === 'APPROVED') {
-      if (purchase.status === 'PAID') {
-        throw AppError.conflict('This purchase has already been approved and paid', 'ALREADY_PAID');
-      }
-
       await tx
         .update(payments)
         .set({

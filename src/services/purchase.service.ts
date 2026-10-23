@@ -1,5 +1,5 @@
-import { eq, and, inArray, sql, isNull, lt } from 'drizzle-orm';
 import crypto from 'node:crypto';
+import { eq, and, inArray, sql, isNull, lt } from 'drizzle-orm';
 import { db } from '../db';
 import {
   purchases,
@@ -649,11 +649,11 @@ export async function createPurchase(buyer: UserSelect, input: CreatePurchaseInp
       upiInstructions: isFreeOrder
         ? null
         : {
-            vpa: env.UPI_VPA,
-            payeeName: env.UPI_PAYEE_NAME,
-            amountPaise: purchase.totalAmountPaise,
-            orderRef: purchase.publicId,
-          },
+          vpa: env.UPI_VPA,
+          payeeName: env.UPI_PAYEE_NAME,
+          amountPaise: purchase.totalAmountPaise,
+          orderRef: purchase.publicId,
+        },
     };
 
     // Record idempotency response if key provided

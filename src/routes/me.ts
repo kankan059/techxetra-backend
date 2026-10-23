@@ -9,6 +9,9 @@ import { requireAuth } from '../middleware/auth';
 import { validate } from '../middleware/validate';
 import { checkProfileCompleteness, toUserDto } from '../services/user.service';
 
+import { getUserTeams } from '../services/team.service';
+import { getUserPurchases } from '../services/purchase.service';
+
 export const meRouter = Router();
 
 const updateProfileSchema = z
@@ -102,14 +105,24 @@ meRouter.get('/me/registrations', requireAuth, (req: Request, res: Response): vo
   sendSuccess(res, []);
 });
 
-// 4. GET /me/teams (placeholder for Task 06)
-meRouter.get('/me/teams', requireAuth, (req: Request, res: Response): void => {
-  sendSuccess(res, []);
+// 4. GET /me/teams
+meRouter.get('/me/teams', requireAuth, async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const teams = await getUserTeams(req.user!.id, req.user!.email);
+    sendSuccess(res, teams);
+  } catch (err) {
+    next(err);
+  }
 });
 
-// 5. GET /me/purchases (placeholder for Task 07)
-meRouter.get('/me/purchases', requireAuth, (req: Request, res: Response): void => {
-  sendSuccess(res, []);
+// 5. GET /me/purchases
+meRouter.get('/me/purchases', requireAuth, async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const purchases = await getUserPurchases(req.user!.id);
+    sendSuccess(res, purchases);
+  } catch (err) {
+    next(err);
+  }
 });
 
 // 6. GET /me/tickets (placeholder for Task 09)

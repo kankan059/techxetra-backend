@@ -9,6 +9,9 @@ import { errorHandler } from './middleware/error-handler';
 import { healthRouter } from './routes/health';
 import { authRouter } from './routes/auth';
 import { meRouter } from './routes/me';
+import { catalogRouter } from './routes/catalog';
+import { eventsRouter } from './routes/events';
+import { leaderboardsRouter } from './routes/leaderboards';
 import { sendError } from './common/response';
 
 export const app: Express = express();
@@ -51,11 +54,19 @@ app.use(csrfProtection);
 app.use(healthRouter);
 app.use('/api/v1', healthRouter);
 
-// Mount Auth and Me routes under both /api/v1 and root prefixes
-app.use('/api/v1', authRouter);
-app.use('/api/v1', meRouter);
-app.use(authRouter);
-app.use(meRouter);
+// Mount Domain Routers under both /api/v1 and root prefixes
+const domainRouters = [
+  catalogRouter,
+  eventsRouter,
+  leaderboardsRouter,
+  authRouter,
+  meRouter,
+];
+
+for (const router of domainRouters) {
+  app.use('/api/v1', router);
+  app.use(router);
+}
 
 // 404 Not Found handler for unmatched routes
 app.use((req: Request, res: Response) => {

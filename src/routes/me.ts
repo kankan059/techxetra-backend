@@ -11,6 +11,7 @@ import { checkProfileCompleteness, toUserDto } from '../services/user.service';
 
 import { getUserTeams } from '../services/team.service';
 import { getUserPurchases } from '../services/purchase.service';
+import { getUserTickets } from '../services/ticket.service';
 
 export const meRouter = Router();
 
@@ -125,7 +126,12 @@ meRouter.get('/me/purchases', requireAuth, async (req: Request, res: Response, n
   }
 });
 
-// 6. GET /me/tickets (placeholder for Task 09)
-meRouter.get('/me/tickets', requireAuth, (req: Request, res: Response): void => {
-  sendSuccess(res, []);
+// 6. GET /me/tickets
+meRouter.get('/me/tickets', requireAuth, async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const tickets = await getUserTickets(req.user!.id);
+    sendSuccess(res, tickets);
+  } catch (err) {
+    next(err);
+  }
 });

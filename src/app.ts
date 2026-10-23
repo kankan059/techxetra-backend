@@ -15,6 +15,8 @@ import { leaderboardsRouter } from './routes/leaderboards';
 import { teamsRouter } from './routes/teams';
 import { teamInvitesRouter } from './routes/team-invites';
 import { purchasesRouter } from './routes/purchases';
+import { paymentsRouter } from './routes/payments';
+import { adminPaymentsRouter } from './routes/admin-payments';
 import { sendError } from './common/response';
 
 export const app: Express = express();
@@ -67,6 +69,8 @@ const domainRouters = [
   teamsRouter,
   teamInvitesRouter,
   purchasesRouter,
+  paymentsRouter,
+  adminPaymentsRouter,
 ];
 
 for (const router of domainRouters) {

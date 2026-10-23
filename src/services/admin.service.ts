@@ -576,14 +576,15 @@ export async function getAttendanceReport() {
   const eventAttendance = await db
     .select({
       eventId: events.id,
-      eventTitle: events.title,
+      eventTitle: events.title,     // keep only ONE of these
+      festDay: events.festDay,
       seatsTaken: events.seatsTaken,
       capacity: events.capacity,
       checkedInCount: sql<number>`count(${tickets.id}) filter (where ${tickets.eventCheckedInAt} is not null)`,
     })
     .from(events)
     .leftJoin(tickets, eq(events.id, tickets.eventId))
-    .groupBy(events.id, events.title, events.seatsTaken, events.capacity)
+    .groupBy(events.id, events.title, events.festDay, events.seatsTaken, events.capacity)
     .orderBy(desc(events.seatsTaken));
 
   return {
@@ -595,6 +596,7 @@ export async function getAttendanceReport() {
     eventBreakdown: eventAttendance.map((e) => ({
       eventId: e.eventId,
       title: e.eventTitle,
+      festDay: e.festDay,
       confirmedAttendees: e.seatsTaken,
       capacity: e.capacity,
       actualCheckedIn: Number(e.checkedInCount || 0),

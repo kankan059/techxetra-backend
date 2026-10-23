@@ -33,6 +33,10 @@ adminPaymentsRouter.get(
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const status = req.query.status as string | undefined;
+      const validStatuses = ['SUBMITTED', 'PENDING', 'ON_HOLD', 'APPROVED', 'SUCCESS', 'REJECTED', 'WITHDRAWN'];
+      if (status && !validStatuses.includes(status)) {
+        throw AppError.badRequest('Invalid payment status filter');
+      }
       const page = req.query.page ? parseInt(req.query.page as string, 10) : 1;
       const pageSize = req.query.pageSize ? parseInt(req.query.pageSize as string, 10) : 20;
 

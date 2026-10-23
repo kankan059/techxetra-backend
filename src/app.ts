@@ -21,6 +21,7 @@ import { ticketsRouter } from './routes/tickets';
 import { scannerRouter } from './routes/scanner';
 import { adminTicketsRouter } from './routes/admin-tickets';
 import { staffEsportsRouter } from './routes/staff-esports';
+import { staffEventsRouter } from './routes/staff-events';
 import { sendError } from './common/response';
 
 export const app: Express = express();
@@ -79,6 +80,7 @@ const domainRouters = [
   scannerRouter,
   adminTicketsRouter,
   staffEsportsRouter,
+  staffEventsRouter,
 ];
 
 for (const router of domainRouters) {

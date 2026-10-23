@@ -86,7 +86,7 @@ eventsRouter.get(
   validate({ query: getEventsQuerySchema }),
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const query = req.query as any;
+      const query = res.locals.validatedQuery as any;
       const page = query.page || 1;
       const pageSize = query.limit || query.pageSize || 20;
       const offset = (page - 1) * pageSize;

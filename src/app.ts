@@ -22,6 +22,10 @@ import { scannerRouter } from './routes/scanner';
 import { adminTicketsRouter } from './routes/admin-tickets';
 import { staffEsportsRouter } from './routes/staff-esports';
 import { staffEventsRouter } from './routes/staff-events';
+import { adminUsersRouter } from './routes/admin-users';
+import { adminEventsRouter } from './routes/admin-events';
+import { adminSettingsRouter } from './routes/admin-settings';
+import { adminReportsRouter } from './routes/admin-reports';
 import { sendError } from './common/response';
 
 export const app: Express = express();
@@ -81,6 +85,10 @@ const domainRouters = [
   adminTicketsRouter,
   staffEsportsRouter,
   staffEventsRouter,
+  adminUsersRouter,
+  adminEventsRouter,
+  adminSettingsRouter,
+  adminReportsRouter,
 ];
 
 for (const router of domainRouters) {

@@ -42,6 +42,14 @@ export type FormSchema = FormFieldDefinition[];
 export function validateFormSchema(schema: any): FormSchema {
   if (!schema) return [];
 
+  if (typeof schema === "string") {
+    try {
+    schema = JSON.parse(schema);
+    } catch {
+      throw AppError.validation("Form schema must be valid JSON");
+    }
+  }
+
   const parsed = formSchemaValidator.safeParse(schema);
   if (!parsed.success) {
     throw AppError.validation('Invalid form schema definition', parsed.error.errors);

@@ -12,6 +12,8 @@ import { meRouter } from './routes/me';
 import { catalogRouter } from './routes/catalog';
 import { eventsRouter } from './routes/events';
 import { leaderboardsRouter } from './routes/leaderboards';
+import { teamsRouter } from './routes/teams';
+import { teamInvitesRouter } from './routes/team-invites';
 import { sendError } from './common/response';
 
 export const app: Express = express();
@@ -61,6 +63,8 @@ const domainRouters = [
   leaderboardsRouter,
   authRouter,
   meRouter,
+  teamsRouter,
+  teamInvitesRouter,
 ];
 
 for (const router of domainRouters) {

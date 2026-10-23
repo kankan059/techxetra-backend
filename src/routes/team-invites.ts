@@ -25,7 +25,8 @@ teamInvitesRouter.post(
   requireAuth,
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const member = await respondToInvitation(req.params.invitationId, req.user!, true);
+      const invitationId = req.params.invitationId as string;
+      const member = await respondToInvitation(invitationId, req.user!, true);
       sendSuccess(res, { message: 'Invitation accepted successfully', member });
     } catch (err) {
       next(err);
@@ -39,7 +40,8 @@ teamInvitesRouter.post(
   requireAuth,
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const member = await respondToInvitation(req.params.invitationId, req.user!, false);
+      const invitationId = req.params.invitationId as string;
+      const member = await respondToInvitation(invitationId, req.user!, false);
       sendSuccess(res, { message: 'Invitation declined', member });
     } catch (err) {
       next(err);

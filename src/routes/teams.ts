@@ -70,8 +70,9 @@ teamsRouter.get(['/teams', '/teams/mine'], requireAuth, async (req: Request, res
 // 3. GET /teams/:teamId
 teamsRouter.get('/teams/:teamId', requireAuth, async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
+    const teamId = req.params.teamId as string;
     const isStaffOrAdmin = req.user!.role === 'SUPER_ADMIN' || req.user!.role === 'EVENT_LEAD' || req.user!.role === 'LEAD';
-    const team = await getTeamById(req.params.teamId, req.user!.id, isStaffOrAdmin);
+    const team = await getTeamById(teamId, req.user!.id, isStaffOrAdmin);
     sendSuccess(res, team);
   } catch (err) {
     next(err);
@@ -85,7 +86,8 @@ teamsRouter.patch(
   validate({ body: renameTeamSchema }),
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const updated = await renameTeam(req.params.teamId, req.user!.id, req.body.name);
+      const teamId = req.params.teamId as string;
+      const updated = await renameTeam(teamId, req.user!.id, req.body.name);
       sendSuccess(res, updated);
     } catch (err) {
       next(err);
@@ -96,7 +98,8 @@ teamsRouter.patch(
 // 5. DELETE /teams/:teamId (Disband)
 teamsRouter.delete('/teams/:teamId', requireAuth, async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    await disbandTeam(req.params.teamId, req.user!.id);
+    const teamId = req.params.teamId as string;
+    await disbandTeam(teamId, req.user!.id);
     sendSuccess(res, { message: 'Team disbanded successfully' });
   } catch (err) {
     next(err);
@@ -110,7 +113,8 @@ teamsRouter.post(
   validate({ body: inviteMemberSchema }),
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const member = await inviteMember(req.params.teamId, req.user!.id, req.body.email);
+      const teamId = req.params.teamId as string;
+      const member = await inviteMember(teamId, req.user!.id, req.body.email);
       sendSuccess(res, member, 201);
     } catch (err) {
       next(err);
@@ -121,7 +125,9 @@ teamsRouter.post(
 // 7. DELETE /teams/:teamId/members/:memberId (Remove or Leave)
 teamsRouter.delete('/teams/:teamId/members/:memberId', requireAuth, async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const updated = await removeMemberOrLeave(req.params.teamId, req.params.memberId, req.user!.id);
+    const teamId = req.params.teamId as string;
+    const memberId = req.params.memberId as string;
+    const updated = await removeMemberOrLeave(teamId, memberId, req.user!.id);
     sendSuccess(res, { message: 'Member removed or left team successfully', member: updated });
   } catch (err) {
     next(err);

@@ -48,7 +48,7 @@ export function compareLeaderboardEntries(
 // Handler for both /leaderboards/:eventId and /events/:idOrSlug/leaderboard
 export async function getLeaderboardHandler(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
-    const eventIdOrSlug = req.params.eventId || req.params.idOrSlug;
+    const eventIdOrSlug = (req.params.eventId || req.params.idOrSlug) as string;
     if (!eventIdOrSlug) {
       throw AppError.badRequest('Event identifier is required');
     }

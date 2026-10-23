@@ -24,7 +24,8 @@ adminTicketsRouter.post(
   requireSuperAdminOnly,
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const ticket = await revokeTicket(req.params.ticketId, req.user!);
+      const ticketId = req.params.ticketId as string;
+      const ticket = await revokeTicket(ticketId, req.user!);
       sendSuccess(res, { message: 'Ticket revoked successfully', ticket });
     } catch (err) {
       next(err);
@@ -39,7 +40,8 @@ adminTicketsRouter.post(
   requireSuperAdminOnly,
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const result = await rotateTicketQr(req.params.ticketId, req.user!);
+      const ticketId = req.params.ticketId as string;
+      const result = await rotateTicketQr(ticketId, req.user!);
       sendSuccess(res, { message: 'QR code rotated successfully', ticket: result });
     } catch (err) {
       next(err);
@@ -55,7 +57,8 @@ adminTicketsRouter.post(
   validate({ body: undoCheckInSchema }),
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const result = await undoCheckIn(req.params.ticketId, req.user!, req.body.reason);
+      const ticketId = req.params.ticketId as string;
+      const result = await undoCheckIn(ticketId, req.user!, req.body.reason);
       sendSuccess(res, result);
     } catch (err) {
       next(err);

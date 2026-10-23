@@ -31,8 +31,9 @@ paymentsRouter.post(
   validate({ body: submitPaymentSchema }),
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
+      const id = req.params.id as string;
       const utr = req.body.transactionId || req.body.transaction_id || req.body.utr;
-      const payment = await submitUpiPayment(req.params.id, req.user!, utr);
+      const payment = await submitUpiPayment(id, req.user!, utr);
       sendSuccess(res, payment, 201);
     } catch (err) {
       next(err);
@@ -46,7 +47,8 @@ paymentsRouter.post(
   requireAuth,
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const result = await withdrawPaymentSubmission(req.params.id, req.user!.id);
+      const id = req.params.id as string;
+      const result = await withdrawPaymentSubmission(id, req.user!.id);
       sendSuccess(res, result);
     } catch (err) {
       next(err);

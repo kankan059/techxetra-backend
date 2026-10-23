@@ -32,7 +32,8 @@ staffEventsRouter.get(
   requireRole(['VOLUNTEER', 'EVENT_LEAD', 'LEAD', 'SUPER_ADMIN']),
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const dashboard = await getEventDashboard(req.user!, req.params.eventId);
+      const eventId = req.params.eventId as string;
+      const dashboard = await getEventDashboard(req.user!, eventId);
       sendSuccess(res, dashboard);
     } catch (err) {
       next(err);
@@ -47,11 +48,12 @@ staffEventsRouter.get(
   requireRole(['VOLUNTEER', 'EVENT_LEAD', 'LEAD', 'SUPER_ADMIN']),
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
+      const eventId = req.params.eventId as string;
       const page = req.query.page ? parseInt(req.query.page as string, 10) : 1;
       const pageSize = req.query.pageSize ? parseInt(req.query.pageSize as string, 10) : 50;
       const search = req.query.search as string | undefined;
 
-      const roster = await getEventAttendeeRoster(req.user!, req.params.eventId, {
+      const roster = await getEventAttendeeRoster(req.user!, eventId, {
         page,
         pageSize,
         search,
@@ -71,7 +73,8 @@ staffEventsRouter.patch(
   requireRole(['EVENT_LEAD', 'LEAD', 'SUPER_ADMIN']),
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const updated = await updateEventOperationalDetails(req.user!, req.params.eventId, req.body);
+      const eventId = req.params.eventId as string;
+      const updated = await updateEventOperationalDetails(req.user!, eventId, req.body);
       sendSuccess(res, updated);
     } catch (err) {
       next(err);

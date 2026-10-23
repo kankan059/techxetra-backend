@@ -7,6 +7,7 @@ import {
   purchaseItems,
   registrations,
   teams,
+  teamMembers,
   users,
   tickets,
 } from '../db/schema';

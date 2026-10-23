@@ -81,7 +81,7 @@ scannerRouter.get(
   requireRole(['VOLUNTEER', 'EVENT_LEAD', 'LEAD', 'SUPER_ADMIN']),
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const { eventId } = req.params;
+      const eventId = req.params.eventId as string;
       await verifyStaffScanPermission(req.user!, 'EVENT', eventId);
 
       const logs = await db

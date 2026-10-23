@@ -1,0 +1,3 @@
+{$DOMAIN:api.techxetra.in} {
+    reverse_proxy backend:4000
+}

@@ -33,7 +33,8 @@ adminSettingsRouter.patch(
   requireSuperAdminOnly,
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const updated = await updateSettingAdmin(req.user!, req.params.key, req.body.value);
+      const key = req.params.key as string;
+      const updated = await updateSettingAdmin(req.user!, key, req.body.value);
       sendSuccess(res, updated);
     } catch (err) {
       next(err);
@@ -48,7 +49,7 @@ adminSettingsRouter.patch(
   requireSuperAdminOnly,
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const dayNum = parseInt(req.params.dayNumber, 10);
+      const dayNum = parseInt(req.params.dayNumber as string, 10);
       const updated = await updateFestDayAdmin(req.user!, dayNum, req.body);
       sendSuccess(res, updated);
     } catch (err) {
@@ -63,7 +64,7 @@ adminSettingsRouter.put(
   requireSuperAdminOnly,
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const dayNum = parseInt(req.params.dayNumber, 10);
+      const dayNum = parseInt(req.params.dayNumber as string, 10);
       const updated = await updateFestDayAdmin(req.user!, dayNum, req.body);
       sendSuccess(res, updated);
     } catch (err) {

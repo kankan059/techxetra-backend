@@ -1,0 +1,52 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: techxetra_db
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-techxetra}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-techxetra_password}
+      POSTGRES_DB: ${POSTGRES_DB:-techxetra_db}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-techxetra} -d ${POSTGRES_DB:-techxetra_db}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: .
+    container_name: techxetra_api
+    restart: always
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: 4000
+      DATABASE_URL: postgresql://${POSTGRES_USER:-techxetra}:${POSTGRES_PASSWORD:-techxetra_password}@postgres:5432/${POSTGRES_DB:-techxetra_db}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-dummy_google_client_id}
+      FRONTEND_ORIGIN: ${FRONTEND_ORIGIN:-http://localhost:3000}
+      TICKET_HMAC_SECRET: ${TICKET_HMAC_SECRET:-secret_hmac_key_for_testing_purposes_only_32_bytes}
+      UPI_VPA: ${UPI_VPA:-techxetra@upi}
+      UPI_PAYEE_NAME: ${UPI_PAYEE_NAME:-TechXetra Tezpur University}
+
+  caddy:
+    image: caddy:alpine
+    container_name: techxetra_caddy
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:
+  caddy_data:
+  caddy_config:

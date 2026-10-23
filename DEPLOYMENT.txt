@@ -1,0 +1,72 @@
+================================================================================
+TECHXETRA BACKEND - COMMANDS & DEPLOYMENT GUIDE
+================================================================================
+
+1. LOCAL TESTING & VERIFICATION
+--------------------------------------------------------------------------------
+# Test TypeScript compilation (should pass with 0 errors)
+npm run build
+
+# Run all 13 test suites (Vitest)
+npm test
+
+# Run only Task 13 test suite
+npx vitest run test/task13.test.ts
+
+
+2. LOCAL DOCKER BUILD TEST
+--------------------------------------------------------------------------------
+# Build the production multi-stage Docker image locally
+docker build -t techxetra-backend:latest .
+
+
+3. FIRST-TIME DEPLOYMENT ON AWS SERVER
+--------------------------------------------------------------------------------
+# 1. Clone repository & configure environment variables in .env:
+#    POSTGRES_USER=techxetra
+#    POSTGRES_PASSWORD=your_secure_password
+#    POSTGRES_DB=techxetra_db
+#    GOOGLE_CLIENT_ID=your_google_client_id
+#    FRONTEND_ORIGIN=https://techxetra.in
+#    TICKET_HMAC_SECRET=your_secret_32_byte_hex_key
+#    UPI_VPA=techxetra@upi
+#    UPI_PAYEE_NAME=TechXetra
+
+# 2. Update Caddyfile with your actual domain:
+#    api.techxetra.in {
+#        reverse_proxy backend:4000
+#    }
+
+# 3. Start PostgreSQL, API, and Caddy with automatic SSL:
+docker compose -f docker-compose.prod.yml up -d --build
+
+# 4. Run database migrations inside container (or from host):
+docker compose -f docker-compose.prod.yml exec backend npm run db:push
+
+
+4. UPDATING CODE LATER ON AWS (WHEN YOU MAKE CODE CHANGES)
+--------------------------------------------------------------------------------
+# 1. Pull new code from git
+git pull
+
+# 2. Rebuild and restart the backend container (DB data is preserved):
+docker compose -f docker-compose.prod.yml up -d --build
+
+
+5. USEFUL MONITORING & MAINTENANCE COMMANDS
+--------------------------------------------------------------------------------
+# Check container status and health
+docker compose -f docker-compose.prod.yml ps
+
+# View live streaming logs for all containers
+docker compose -f docker-compose.prod.yml logs -f
+
+# View logs for backend only
+docker compose -f docker-compose.prod.yml logs -f backend
+
+# Stop all containers
+docker compose -f docker-compose.prod.yml down
+
+# Restart all containers
+docker compose -f docker-compose.prod.yml restart
+================================================================================

@@ -46,7 +46,8 @@ adminEventsRouter.patch(
   requireSuperAdminOnly,
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const updated = await updateEventAdmin(req.user!, req.params.id, req.body);
+      const id = req.params.id as string;
+      const updated = await updateEventAdmin(req.user!, id, req.body);
       sendSuccess(res, updated);
     } catch (err) {
       next(err);
@@ -61,7 +62,8 @@ adminEventsRouter.delete(
   requireSuperAdminOnly,
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const result = await safeDeleteEventAdmin(req.user!, req.params.id);
+      const id = req.params.id as string;
+      const result = await safeDeleteEventAdmin(req.user!, id);
       sendSuccess(res, result);
     } catch (err) {
       next(err);
@@ -76,7 +78,8 @@ adminEventsRouter.post(
   requireSuperAdminOnly,
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const updated = await updateEventAdmin(req.user!, req.params.id, { status: 'OPEN' });
+      const id = req.params.id as string;
+      const updated = await updateEventAdmin(req.user!, id, { status: 'OPEN' });
       sendSuccess(res, { message: 'Event published successfully', event: updated });
     } catch (err) {
       next(err);
@@ -91,7 +94,8 @@ adminEventsRouter.post(
   requireSuperAdminOnly,
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const updated = await updateEventAdmin(req.user!, req.params.id, { status: 'CANCELLED' });
+      const id = req.params.id as string;
+      const updated = await updateEventAdmin(req.user!, id, { status: 'CANCELLED' });
       sendSuccess(res, { message: 'Event cancelled successfully', event: updated });
     } catch (err) {
       next(err);
@@ -107,8 +111,9 @@ adminEventsRouter.post(
   validate({ body: assignStaffSchema }),
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
+      const id = req.params.id as string;
       const userId = req.body.userId || req.body.user_id;
-      const assignment = await assignStaffAdmin(req.user!, req.params.id, userId, req.body.role);
+      const assignment = await assignStaffAdmin(req.user!, id, userId, req.body.role);
       sendSuccess(res, assignment, 201);
     } catch (err) {
       next(err);
@@ -122,8 +127,10 @@ adminEventsRouter.put(
   requireSuperAdminOnly,
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
+      const id = req.params.id as string;
+      const userId = req.params.userId as string;
       const role = req.body.role || 'VOLUNTEER';
-      const assignment = await assignStaffAdmin(req.user!, req.params.id, req.params.userId, role);
+      const assignment = await assignStaffAdmin(req.user!, id, userId, role);
       sendSuccess(res, assignment);
     } catch (err) {
       next(err);
@@ -138,7 +145,9 @@ adminEventsRouter.delete(
   requireSuperAdminOnly,
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const result = await removeStaffAdmin(req.user!, req.params.id, req.params.userId);
+      const id = req.params.id as string;
+      const userId = req.params.userId as string;
+      const result = await removeStaffAdmin(req.user!, id, userId);
       sendSuccess(res, result);
     } catch (err) {
       next(err);
@@ -153,6 +162,7 @@ adminEventsRouter.get(
   requireSuperAdminOnly,
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
+      const id = req.params.id as string;
       const staffList = await db
         .select({
           userId: eventStaff.userId,
@@ -164,7 +174,7 @@ adminEventsRouter.get(
         })
         .from(eventStaff)
         .innerJoin(users, eq(eventStaff.userId, users.id))
-        .where(and(eq(eventStaff.eventId, req.params.id), sql`${eventStaff.revokedAt} IS NULL`));
+        .where(and(eq(eventStaff.eventId, id), sql`${eventStaff.revokedAt} IS NULL`));
 
       sendSuccess(res, staffList);
     } catch (err) {

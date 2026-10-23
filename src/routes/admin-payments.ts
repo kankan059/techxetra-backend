@@ -51,8 +51,9 @@ adminPaymentsRouter.get(
   requireSuperAdminOnly,
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const [payment] = await db.select().from(payments).where(eq(payments.id, req.params.id)).limit(1);
-      if (!payment) throw AppError.notFound(`Payment '${req.params.id}' not found`);
+      const id = req.params.id as string;
+      const [payment] = await db.select().from(payments).where(eq(payments.id, id)).limit(1);
+      if (!payment) throw AppError.notFound(`Payment '${id}' not found`);
 
       const [purchase] = await db.select().from(purchases).where(eq(purchases.id, payment.purchaseId)).limit(1);
       const items = await db.select().from(purchaseItems).where(eq(purchaseItems.purchaseId, payment.purchaseId));
@@ -80,8 +81,9 @@ adminPaymentsRouter.post(
   validate({ body: reviewDecisionSchema }),
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
+      const id = req.params.id as string;
       const result = await reviewPaymentSubmission(
-        req.params.id,
+        id,
         req.user!,
         req.body,
         req.requestId
@@ -100,7 +102,8 @@ adminPaymentsRouter.post(
   requireSuperAdminOnly,
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const count = await fulfillTicketsForPurchase(req.params.id);
+      const id = req.params.id as string;
+      const count = await fulfillTicketsForPurchase(id);
       sendSuccess(res, { message: 'Ticket fulfillment completed successfully', fulfilledCount: count });
     } catch (err) {
       next(err);

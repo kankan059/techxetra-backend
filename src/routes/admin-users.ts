@@ -50,7 +50,8 @@ adminUsersRouter.patch(
       const isActive = req.body.isActive ?? req.body.is_active;
       const studentFieldsLocked = req.body.studentFieldsLocked ?? req.body.student_fields_locked;
 
-      const updated = await updateUserAdmin(req.user!, req.params.id, {
+      const id = req.params.id as string;
+      const updated = await updateUserAdmin(req.user!, id, {
         role: req.body.role,
         isActive,
         studentFieldsLocked,

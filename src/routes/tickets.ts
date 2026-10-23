@@ -25,7 +25,8 @@ ticketsRouter.get(
   requireAuth,
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const ticket = await getTicketById(req.params.ticketId, req.user!);
+      const ticketId = req.params.ticketId as string;
+      const ticket = await getTicketById(ticketId, req.user!);
       sendSuccess(res, ticket);
     } catch (err) {
       next(err);

@@ -74,8 +74,9 @@ purchasesRouter.get(
   requireAuth,
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
+      const purchaseId = req.params.purchaseId as string;
       const isSuperAdmin = req.user!.role === 'SUPER_ADMIN';
-      const purchase = await getPurchaseById(req.params.purchaseId, req.user!.id, isSuperAdmin);
+      const purchase = await getPurchaseById(purchaseId, req.user!.id, isSuperAdmin);
       sendSuccess(res, purchase);
     } catch (err) {
       next(err);
@@ -89,7 +90,8 @@ purchasesRouter.post(
   requireAuth,
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const result = await cancelPurchase(req.params.purchaseId, req.user!.id);
+      const purchaseId = req.params.purchaseId as string;
+      const result = await cancelPurchase(purchaseId, req.user!.id);
       sendSuccess(res, result);
     } catch (err) {
       next(err);
@@ -103,8 +105,9 @@ purchasesRouter.get(
   requireAuth,
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
+      const purchaseId = req.params.purchaseId as string;
       const isSuperAdmin = req.user!.role === 'SUPER_ADMIN';
-      const purchase = await getPurchaseById(req.params.purchaseId, req.user!.id, isSuperAdmin);
+      const purchase = await getPurchaseById(purchaseId, req.user!.id, isSuperAdmin);
 
       const instructions = {
         purchaseId: purchase.id,

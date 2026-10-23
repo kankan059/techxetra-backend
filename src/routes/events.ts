@@ -158,7 +158,7 @@ eventsRouter.get(
   optionalAuth,
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const { idOrSlug } = req.params;
+      const idOrSlug = req.params.idOrSlug as string;
 
       const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(idOrSlug);
 

@@ -53,7 +53,8 @@ staffEsportsRouter.post(
   validate({ body: recordScoreSchema }),
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const score = await recordRoundScore(req.user!, req.params.id, req.body);
+      const id = req.params.id as string;
+      const score = await recordRoundScore(req.user!, id, req.body);
       sendSuccess(res, score, 201);
     } catch (err) {
       next(err);
@@ -68,8 +69,10 @@ staffEsportsRouter.put(
   validate({ body: recordScoreSchema }),
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const payload = { ...req.body, matchId: req.params.matchId };
-      const score = await recordRoundScore(req.user!, req.params.id, payload);
+      const id = req.params.id as string;
+      const matchId = req.params.matchId as string;
+      const payload = { ...req.body, matchId };
+      const score = await recordRoundScore(req.user!, id, payload);
       sendSuccess(res, score, 200);
     } catch (err) {
       next(err);
@@ -84,8 +87,10 @@ staffEsportsRouter.delete(
   requireRole(['EVENT_LEAD', 'LEAD', 'SUPER_ADMIN']),
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
+      const id = req.params.id as string;
+      const scoreId = req.params.scoreId as string;
       const reason = (req.query.reason as string) || (req.body?.reason as string) || 'Manual deletion';
-      const result = await deleteRoundScore(req.user!, req.params.id, req.params.scoreId, reason);
+      const result = await deleteRoundScore(req.user!, id, scoreId, reason);
       sendSuccess(res, result);
     } catch (err) {
       next(err);
@@ -100,7 +105,8 @@ staffEsportsRouter.post(
   requireRole(['EVENT_LEAD', 'LEAD', 'SUPER_ADMIN']),
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const event = await finalizeScoring(req.user!, req.params.id);
+      const id = req.params.id as string;
+      const event = await finalizeScoring(req.user!, id);
       sendSuccess(res, {
         message: 'Tournament scoring finalized and leaderboard published successfully',
         event: { id: event.id, title: event.title, scoringStatus: event.scoringStatus },
@@ -119,7 +125,8 @@ staffEsportsRouter.post(
   validate({ body: reopenSchema }),
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const event = await reopenScoring(req.user!, req.params.id, req.body.reason);
+      const id = req.params.id as string;
+      const event = await reopenScoring(req.user!, id, req.body.reason);
       sendSuccess(res, {
         message: 'Tournament scoring reopened for updates',
         event: { id: event.id, title: event.title, scoringStatus: event.scoringStatus },
@@ -137,7 +144,8 @@ staffEsportsRouter.get(
   requireRole(['VOLUNTEER', 'EVENT_LEAD', 'LEAD', 'SUPER_ADMIN']),
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const matches = await getEventMatches(req.user!, req.params.id);
+      const id = req.params.id as string;
+      const matches = await getEventMatches(req.user!, id);
       sendSuccess(res, matches);
     } catch (err) {
       next(err);
@@ -152,7 +160,8 @@ staffEsportsRouter.post(
   validate({ body: createMatchSchema }),
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const match = await createEventMatch(req.user!, req.params.id, req.body);
+      const id = req.params.id as string;
+      const match = await createEventMatch(req.user!, id, req.body);
       sendSuccess(res, match, 201);
     } catch (err) {
       next(err);

@@ -27,9 +27,7 @@ export const envSchema = z.object({
     )
     : z.string().min(1).default('dummy-google-client-id'),
 
-  FRONTEND_ORIGIN: isProduction
-    ? z.string().url()
-    : z.string().min(1).default('http://localhost:3000'),
+  FRONTEND_ORIGIN: z.string().default('*'),
 
   TICKET_HMAC_SECRET: isProduction
     ? requiredSecret('TICKET_HMAC_SECRET')

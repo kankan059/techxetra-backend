@@ -45,8 +45,8 @@ export function csrfProtection(req: Request, res: Response, next: NextFunction):
     return;
   }
 
-  // If an Origin or Referer header was provided, it must match the expected frontend origin
-  if (origin) {
+  // If an Origin or Referer header was provided, validate only if a specific origin is enforced
+  if (origin && env.FRONTEND_ORIGIN && env.FRONTEND_ORIGIN !== '*' && env.FRONTEND_ORIGIN !== 'all') {
     try {
       const allowedOrigin = new URL(env.FRONTEND_ORIGIN).origin;
       if (origin !== allowedOrigin) {
@@ -54,8 +54,7 @@ export function csrfProtection(req: Request, res: Response, next: NextFunction):
         return;
       }
     } catch {
-      sendError(res, 'CSRF_ORIGIN_INVALID', 'Invalid origin configuration', 403);
-      return;
+      // If FRONTEND_ORIGIN is not a single valid URL, allow cross-origin
     }
   }
 

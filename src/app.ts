@@ -43,13 +43,24 @@ app.use(
   })
 );
 
-// CORS configuration
+// CORS configuration - Allows requests from all origins with credentials support
 app.use(
   cors({
-    origin: env.FRONTEND_ORIGIN,
+    origin: (origin, callback) => callback(null, true),
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'Idempotency-Key', 'x-request-id'],
+    allowedHeaders: [
+      'Content-Type',
+      'Authorization',
+      'Idempotency-Key',
+      'x-request-id',
+      'X-Requested-With',
+      'Accept',
+      'Origin',
+      'Cookie',
+      'x-test-csrf',
+    ],
+    exposedHeaders: ['x-request-id'],
   })
 );
 

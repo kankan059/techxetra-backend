@@ -8,6 +8,8 @@ import {
   settings,
   tickets,
   registrations,
+  teams,
+  teamMembers,
   purchases,
   payments,
   checkInLogs,
@@ -148,6 +150,219 @@ export async function updateUserAdmin(
   });
 
   return updated;
+}
+
+export async function getUserDetailsAdmin(targetUserId: string) {
+  const trimmedId = targetUserId.trim();
+
+  // Find user by id or email
+  const [target] = await db
+    .select()
+    .from(users)
+    .where(
+      or(
+        eq(users.id, trimmedId),
+        ilike(users.email, trimmedId)
+      )
+    )
+    .limit(1);
+
+  if (!target) {
+    throw AppError.notFound(`User '${targetUserId}' not found`);
+  }
+
+  // 1. Direct registrations
+  const directRegistrations = await db
+    .select({
+      registrationId: registrations.id,
+      status: registrations.status,
+      seatCount: registrations.seatCount,
+      registeredAt: registrations.createdAt,
+      confirmedAt: registrations.confirmedAt,
+      eventId: events.id,
+      eventSlug: events.slug,
+      eventTitle: events.title,
+      category: events.category,
+      format: events.format,
+      venue: events.venue,
+      festDay: events.festDay,
+      isTeam: events.isTeam,
+      teamId: registrations.teamId,
+      teamName: teams.name,
+    })
+    .from(registrations)
+    .innerJoin(events, eq(registrations.eventId, events.id))
+    .leftJoin(teams, eq(registrations.teamId, teams.id))
+    .where(
+      and(
+        eq(registrations.participantId, target.id),
+        inArray(registrations.status, ['RESERVED', 'CONFIRMED'])
+      )
+    );
+
+  // 2. Team registrations where user is an accepted member of the team
+  const teamRegistrations = await db
+    .select({
+      registrationId: registrations.id,
+      status: registrations.status,
+      seatCount: registrations.seatCount,
+      registeredAt: registrations.createdAt,
+      confirmedAt: registrations.confirmedAt,
+      eventId: events.id,
+      eventSlug: events.slug,
+      eventTitle: events.title,
+      category: events.category,
+      format: events.format,
+      venue: events.venue,
+      festDay: events.festDay,
+      isTeam: events.isTeam,
+      teamId: teams.id,
+      teamName: teams.name,
+    })
+    .from(teamMembers)
+    .innerJoin(teams, eq(teamMembers.teamId, teams.id))
+    .innerJoin(registrations, eq(teams.id, registrations.teamId))
+    .innerJoin(events, eq(registrations.eventId, events.id))
+    .where(
+      and(
+        eq(teamMembers.userId, target.id),
+        eq(teamMembers.status, 'ACCEPTED'),
+        inArray(registrations.status, ['RESERVED', 'CONFIRMED'])
+      )
+    );
+
+  // Deduplicate registrations by registrationId
+  const regMap = new Map<string, typeof directRegistrations[0]>();
+  for (const reg of directRegistrations) {
+    regMap.set(reg.registrationId, reg);
+  }
+  for (const reg of teamRegistrations) {
+    if (!regMap.has(reg.registrationId)) {
+      regMap.set(reg.registrationId, reg);
+    }
+  }
+
+  // 3. User Tickets
+  const userTickets = await db
+    .select({
+      id: tickets.id,
+      publicId: tickets.publicId,
+      eventId: tickets.eventId,
+      status: tickets.status,
+      tier: tickets.tier,
+      eventCheckedInAt: tickets.eventCheckedInAt,
+      createdAt: tickets.createdAt,
+    })
+    .from(tickets)
+    .where(eq(tickets.beneficiaryId, target.id));
+
+  const ticketByEvent = new Map<string, typeof userTickets[0]>();
+  for (const t of userTickets) {
+    if (t.eventId) {
+      ticketByEvent.set(t.eventId, t);
+    }
+  }
+
+  const participatingEvents = Array.from(regMap.values()).map((r) => {
+    const t = ticketByEvent.get(r.eventId);
+    return {
+      registrationId: r.registrationId,
+      registrationStatus: r.status,
+      registeredAt: r.registeredAt,
+      confirmedAt: r.confirmedAt,
+      event: {
+        id: r.eventId,
+        slug: r.eventSlug,
+        title: r.eventTitle,
+        category: r.category,
+        format: r.format,
+        venue: r.venue,
+        festDay: r.festDay,
+        isTeam: Boolean(r.isTeam),
+      },
+      team: r.teamId ? { id: r.teamId, name: r.teamName } : null,
+      ticket: t
+        ? {
+            id: t.id,
+            publicId: t.publicId,
+            status: t.status,
+            tier: t.tier,
+            checkedInAt: t.eventCheckedInAt,
+          }
+        : null,
+    };
+  });
+
+  // 4. Teams the user is in
+  const userTeams = await db
+    .select({
+      teamId: teams.id,
+      teamName: teams.name,
+      eventId: teams.eventId,
+      eventTitle: events.title,
+      eventSlug: events.slug,
+      teamStatus: teams.status,
+      leaderId: teams.leaderId,
+      membershipRole: teamMembers.role,
+      membershipStatus: teamMembers.status,
+      joinedAt: teamMembers.createdAt,
+    })
+    .from(teamMembers)
+    .innerJoin(teams, eq(teamMembers.teamId, teams.id))
+    .innerJoin(events, eq(teams.eventId, events.id))
+    .where(
+      and(
+        or(eq(teamMembers.userId, target.id), ilike(teamMembers.invitedEmail, target.email)),
+        ne(teams.status, 'CANCELLED')
+      )
+    )
+    .orderBy(desc(teamMembers.createdAt));
+
+  const formattedTeams = userTeams.map((t) => ({
+    id: t.teamId,
+    name: t.teamName,
+    eventId: t.eventId,
+    eventTitle: t.eventTitle,
+    eventSlug: t.eventSlug,
+    isLeader: t.leaderId === target.id,
+    role: t.membershipRole,
+    status: t.membershipStatus,
+    teamStatus: t.teamStatus,
+    joinedAt: t.joinedAt,
+  }));
+
+  // 5. Staff assignments
+  const staffRows = await db
+    .select({
+      eventId: eventStaff.eventId,
+      eventTitle: events.title,
+      eventSlug: events.slug,
+      role: eventStaff.role,
+      assignedAt: eventStaff.createdAt,
+    })
+    .from(eventStaff)
+    .innerJoin(events, eq(eventStaff.eventId, events.id))
+    .where(and(eq(eventStaff.userId, target.id), isNull(eventStaff.revokedAt)));
+
+  return {
+    id: target.id,
+    name: target.name,
+    email: target.email,
+    phone: target.phone,
+    avatarUrl: target.avatarUrl,
+    role: target.role,
+    isStudent: Boolean(target.isStudent),
+    institutionName: target.institutionName,
+    institutionId: target.institutionId,
+    studentFieldsLocked: Boolean(target.studentFieldsLocked),
+    isActive: Boolean(target.isActive),
+    profileCompletedAt: target.profileCompletedAt,
+    createdAt: target.createdAt,
+    updatedAt: target.updatedAt,
+    events: participatingEvents,
+    teams: formattedTeams,
+    staffAssignments: staffRows,
+  };
 }
 
 // ==========================================

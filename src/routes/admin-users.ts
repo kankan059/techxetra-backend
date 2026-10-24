@@ -4,7 +4,7 @@ import { requireAuth, requireSuperAdminOnly } from '../middleware/auth';
 import { validate } from '../middleware/validate';
 import { sendSuccess, sendPaginated } from '../common/response';
 import { userRoleEnum } from '../db/schema';
-import { listUsers, updateUserAdmin } from '../services/admin.service';
+import { listUsers, updateUserAdmin, getUserDetailsAdmin } from '../services/admin.service';
 
 export const adminUsersRouter = Router();
 
@@ -58,6 +58,22 @@ adminUsersRouter.patch(
       });
 
       sendSuccess(res, updated);
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
+// 3. GET /admin/users/:id
+adminUsersRouter.get(
+  '/admin/users/:id',
+  requireAuth,
+  requireSuperAdminOnly,
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const id = req.params.id as string;
+      const userDetails = await getUserDetailsAdmin(id);
+      sendSuccess(res, userDetails);
     } catch (err) {
       next(err);
     }

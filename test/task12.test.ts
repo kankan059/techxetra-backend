@@ -11,6 +11,13 @@ describe('TASK-12: Super Admin Operations, BI Reports & Audit Logging', () => {
       expect(res.body.error.code).toBe('UNAUTHENTICATED');
     });
 
+    it('GET /api/v1/admin/users/:id should require Super Admin (401 when unauthenticated)', async () => {
+      const res = await request(app).get('/api/v1/admin/users/TX260001');
+      expect(res.status).toBe(401);
+      expect(res.body.success).toBe(false);
+      expect(res.body.error.code).toBe('UNAUTHENTICATED');
+    });
+
     it('POST /api/v1/admin/events should require Super Admin (401)', async () => {
       const res = await request(app)
         .post('/api/v1/admin/events')

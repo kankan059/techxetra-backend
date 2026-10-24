@@ -1,4 +1,4 @@
-import { eq, and, sql, ilike, or, count, desc, inArray, isNull, sum } from 'drizzle-orm';
+import { eq, ne, and, sql, ilike, or, count, desc, inArray, isNull, sum } from 'drizzle-orm';
 import { db } from '../db';
 import {
   users,
@@ -238,7 +238,15 @@ export async function updateEventAdmin(adminUser: UserSelect, eventId: string, i
   if (input.festDay !== undefined) updates.festDay = input.festDay;
   if (input.shortDescription !== undefined) updates.shortDescription = input.shortDescription;
   if (input.description !== undefined) updates.description = input.description;
-  if (input.rules !== undefined) updates.rules = input.rules;
+  if (input.rules !== undefined) {
+    if (Array.isArray(input.rules)) {
+      updates.rules = input.rules.join('\n');
+    } else if (typeof input.rules === 'string') {
+      updates.rules = input.rules;
+    } else {
+      updates.rules = String(input.rules);
+    }
+  }
   if (input.venue !== undefined) updates.venue = input.venue;
   if (input.organizer !== undefined) updates.organizer = input.organizer;
   if (input.eligibility !== undefined) updates.eligibility = input.eligibility;
@@ -360,6 +368,59 @@ export async function assignStaffAdmin(
   const now = Date.now();
   const normalizedRole = role === 'LEAD' ? 'EVENT_LEAD' : role;
 
+  let reassignedFrom: { eventId: string; eventTitle: string } | null = null;
+
+  // Single-Lead Invariant: One user can only lead one event at a time.
+  // If user was already leading another event, automatically revoke the old lead assignment.
+  if (normalizedRole === 'EVENT_LEAD') {
+    const [existingLead] = await db
+      .select({
+        eventId: eventStaff.eventId,
+        eventTitle: events.title,
+      })
+      .from(eventStaff)
+      .innerJoin(events, eq(eventStaff.eventId, events.id))
+      .where(
+        and(
+          eq(eventStaff.userId, targetUserId),
+          inArray(eventStaff.role, ['EVENT_LEAD', 'LEAD']),
+          isNull(eventStaff.revokedAt),
+          ne(eventStaff.eventId, eventId)
+        )
+      )
+      .limit(1);
+
+    if (existingLead) {
+      // Automatically revoke previous lead assignment
+      await db
+        .update(eventStaff)
+        .set({ revokedAt: now })
+        .where(
+          and(
+            eq(eventStaff.eventId, existingLead.eventId),
+            eq(eventStaff.userId, targetUserId)
+          )
+        );
+
+      await db.insert(auditLogs).values({
+        actorId: adminUser.id,
+        action: 'STAFF_LEAD_TRANSFERRED',
+        targetType: 'EVENT_STAFF',
+        targetId: `${existingLead.eventId}:${targetUserId}`,
+        details: {
+          previousEventId: existingLead.eventId,
+          previousEventTitle: existingLead.eventTitle,
+          newEventId: eventId,
+          userId: targetUserId,
+          reason: 'Auto-transferred to new event as Event Lead',
+        },
+        createdAt: now,
+      });
+
+      reassignedFrom = existingLead;
+    }
+  }
+
   const [assignment] = await db
     .insert(eventStaff)
     .values({
@@ -387,7 +448,10 @@ export async function assignStaffAdmin(
     createdAt: now,
   });
 
-  return assignment;
+  return {
+    ...assignment,
+    reassignedFrom,
+  };
 }
 
 export async function removeStaffAdmin(adminUser: UserSelect, eventId: string, targetUserId: string) {

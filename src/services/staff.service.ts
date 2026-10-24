@@ -6,9 +6,11 @@ import {
   users,
   registrations,
   teams,
+  teamMembers,
   tickets,
   purchaseItems,
   purchases,
+  auditLogs,
 } from '../db/schema';
 import { AppError } from '../common/errors';
 import { validateFormSchema } from './form.service';
@@ -335,32 +337,27 @@ export interface LeadEventUpdateInput {
   registration_closes_at?: number;
 }
 
-const PROTECTED_FIELDS = new Set([
-  'pricePaise',
-  'price_paise',
-  'studentPricePaise',
-  'student_price_paise',
-  'priceModel',
-  'price_model',
-  'capacity',
-  'capacityUnit',
-  'capacity_unit',
-  'category',
-  'format',
-  'minTeamSize',
-  'min_team_size',
-  'maxTeamSize',
-  'max_team_size',
-  'status',
+const SYSTEM_ONLY_FIELDS = new Set([
   'role',
   'staff',
+  'assignedBy',
+  'assigned_by',
   'payment',
   'tickets',
+  'seatsTaken',
+  'seats_taken',
+  'createdAt',
+  'created_at',
+  'createdBy',
+  'created_by',
+  'id',
 ]);
 
 /**
- * Allows Event Leads to update descriptive/public event metadata for assigned events.
- * Strictly blocks editing pricing, capacity, category, team constraints, or payment state.
+ * Allows Event Leads to update their event details with full autonomy,
+ * while preventing edge-case invalidations (e.g. invalid capacity drops,
+ * changing team mode/formats when registrations exist, or shrinking team
+ * sizes below already-registered team sizes).
  */
 export async function updateEventOperationalDetails(
   staffUser: UserSelect,
@@ -377,46 +374,213 @@ export async function updateEventOperationalDetails(
     );
   }
 
-  // Protection Invariant: Reject protected fields
+  // Reject system-only or unrelated fields (staff/roles/accounting internals)
   for (const key of Object.keys(input)) {
-    if (PROTECTED_FIELDS.has(key)) {
+    if (SYSTEM_ONLY_FIELDS.has(key)) {
       throw AppError.forbidden(
-        `Field '${key}' is protected. Event Leads cannot modify pricing, capacity, category, format, or status.`,
+        `Field '${key}' is managed by system/admin and cannot be modified here.`,
         'FIELD_NOT_ALLOWED'
       );
     }
   }
 
+  // Check active registrations count
+  const [regCountResult] = await db
+    .select({ total: count() })
+    .from(registrations)
+    .where(
+      and(
+        eq(registrations.eventId, eventId),
+        inArray(registrations.status, ['RESERVED', 'CONFIRMED'])
+      )
+    );
+
+  const activeRegistrationsCount = Number(regCountResult?.total || 0);
+  const hasActiveRegistrations = activeRegistrationsCount > 0;
+
+  // 1. Capacity Integrity Check
+  const newCapacity = input.capacity !== undefined ? input.capacity : undefined;
+  if (newCapacity !== undefined && newCapacity !== null) {
+    if (typeof newCapacity !== 'number' || newCapacity < 1) {
+      throw AppError.badRequest('Capacity must be a positive integer or null (unlimited).', 'INVALID_CAPACITY');
+    }
+    if (newCapacity < event.seatsTaken) {
+      throw AppError.badRequest(
+        `Cannot reduce capacity to ${newCapacity}. Current seats taken is ${event.seatsTaken}.`,
+        'CAPACITY_BELOW_OCCUPANCY'
+      );
+    }
+  }
+
+  // 2. Format / Team Mode / Price Model Invariants (Locked when registrations exist)
+  if (hasActiveRegistrations) {
+    if (input.format !== undefined && input.format !== event.format) {
+      throw AppError.badRequest(
+        `Cannot change event format to '${input.format}' because ${activeRegistrationsCount} active registration(s) already exist.`,
+        'CANNOT_CHANGE_FORMAT_WITH_REGISTRATIONS'
+      );
+    }
+    const isTeamInput = input.isTeam ?? input.is_team;
+    if (isTeamInput !== undefined && (isTeamInput ? 1 : 0) !== event.isTeam) {
+      throw AppError.badRequest(
+        `Cannot change event team mode because ${activeRegistrationsCount} active registration(s) already exist.`,
+        'CANNOT_CHANGE_FORMAT_WITH_REGISTRATIONS'
+      );
+    }
+    const priceModelInput = input.priceModel ?? input.price_model;
+    if (priceModelInput !== undefined && priceModelInput !== event.priceModel) {
+      throw AppError.badRequest(
+        `Cannot change price model because ${activeRegistrationsCount} active registration(s) already exist.`,
+        'CANNOT_CHANGE_PRICE_MODEL_WITH_REGISTRATIONS'
+      );
+    }
+  }
+
+  // 3. Team Size Invariants (minTeamSize, maxTeamSize)
+  const newMin = input.minTeamSize ?? input.min_team_size;
+  const newMax = input.maxTeamSize ?? input.max_team_size;
+  const effectiveMin = newMin !== undefined ? newMin : event.minTeamSize;
+  const effectiveMax = newMax !== undefined ? newMax : event.maxTeamSize;
+
+  if (newMin !== undefined && newMin < 1) {
+    throw AppError.badRequest('Minimum team size must be at least 1.', 'INVALID_TEAM_SIZE');
+  }
+  if (effectiveMax < effectiveMin) {
+    throw AppError.badRequest(
+      `Maximum team size (${effectiveMax}) cannot be less than minimum team size (${effectiveMin}).`,
+      'INVALID_TEAM_SIZE'
+    );
+  }
+
+  if (hasActiveRegistrations && (newMin !== undefined || newMax !== undefined)) {
+    const registeredTeams = await db
+      .select({
+        teamId: registrations.teamId,
+        teamName: teams.name,
+        memberCount: count(teamMembers.id),
+      })
+      .from(registrations)
+      .innerJoin(teams, eq(registrations.teamId, teams.id))
+      .innerJoin(teamMembers, eq(teams.id, teamMembers.teamId))
+      .where(
+        and(
+          eq(registrations.eventId, eventId),
+          inArray(registrations.status, ['RESERVED', 'CONFIRMED'])
+        )
+      )
+      .groupBy(registrations.teamId, teams.name);
+
+    for (const team of registeredTeams) {
+      const mCount = Number(team.memberCount);
+      if (newMin !== undefined && mCount < newMin) {
+        throw AppError.badRequest(
+          `Cannot increase minTeamSize to ${newMin}. Team '${team.teamName}' has already registered with only ${mCount} member(s).`,
+          'MIN_TEAM_SIZE_CONFLICT'
+        );
+      }
+      if (newMax !== undefined && mCount > newMax) {
+        throw AppError.badRequest(
+          `Cannot decrease maxTeamSize to ${newMax}. Team '${team.teamName}' has already registered with ${mCount} members.`,
+          'MAX_TEAM_SIZE_CONFLICT'
+        );
+      }
+    }
+  }
+
+  // Build Updates
   const updates: Partial<typeof events.$inferInsert> = {
     updatedAt: Date.now(),
   };
 
   if (input.title) updates.title = input.title.trim();
+  if (input.slug) updates.slug = input.slug.trim();
+  if (input.category) updates.category = input.category;
+  if (input.format) updates.format = input.format;
+
+  const isTeam = input.isTeam ?? input.is_team;
+  if (isTeam !== undefined) updates.isTeam = isTeam ? 1 : 0;
+
+  const priceModel = input.priceModel ?? input.price_model;
+  if (priceModel) updates.priceModel = priceModel;
+
+  const pricePaise = input.pricePaise ?? input.price_paise;
+  if (pricePaise !== undefined) {
+    if (pricePaise < 0) throw AppError.badRequest('Price cannot be negative.', 'INVALID_PRICE');
+    updates.pricePaise = pricePaise;
+  }
+
+  const studentPricePaise = input.studentPricePaise ?? input.student_price_paise;
+  if (studentPricePaise !== undefined) {
+    if (studentPricePaise < 0) throw AppError.badRequest('Student price cannot be negative.', 'INVALID_PRICE');
+    updates.studentPricePaise = studentPricePaise;
+  }
+
+  if (newMin !== undefined) updates.minTeamSize = newMin;
+  if (newMax !== undefined) updates.maxTeamSize = newMax;
+  if (input.capacity !== undefined) updates.capacity = input.capacity;
+
+  const capUnit = input.capacityUnit ?? input.capacity_unit;
+  if (capUnit) updates.capacityUnit = capUnit;
+
   if (input.shortDescription !== undefined) updates.shortDescription = input.shortDescription;
   if (input.description !== undefined) updates.description = input.description;
-  if (input.rules !== undefined) updates.rules = input.rules;
+
+  // Rules: accepts either a string (with \n or markdown) or an array of strings
+  if (input.rules !== undefined) {
+    if (Array.isArray(input.rules)) {
+      updates.rules = input.rules.join('\n');
+    } else if (typeof input.rules === 'string') {
+      updates.rules = input.rules;
+    } else {
+      updates.rules = String(input.rules);
+    }
+  }
+
   if (input.venue !== undefined) updates.venue = input.venue.trim();
   if (input.organizer !== undefined) updates.organizer = input.organizer.trim();
   if (input.eligibility !== undefined) updates.eligibility = input.eligibility;
   if (input.timeline !== undefined) updates.timeline = input.timeline;
   if (input.prizes !== undefined) updates.prizes = input.prizes;
   if (input.metadata !== undefined) updates.metadata = input.metadata;
+  if (input.status) updates.status = input.status;
+
+  const volunteersCanScore = input.volunteersCanScore ?? input.volunteers_can_score;
+  if (volunteersCanScore !== undefined) updates.volunteersCanScore = volunteersCanScore ? 1 : 0;
+
+  // Schedule & Timing
+  const festDay = input.festDay ?? input.fest_day;
+  if (festDay !== undefined) updates.festDay = festDay;
+
+  const startsAt = input.startsAt ?? input.starts_at;
+  if (startsAt !== undefined) updates.startsAt = startsAt;
+
+  const endsAt = input.endsAt ?? input.ends_at;
+  if (endsAt !== undefined) updates.endsAt = endsAt;
+
+  const regOpens = input.registrationOpensAt ?? input.registration_opens_at;
+  if (regOpens !== undefined) updates.registrationOpensAt = regOpens;
 
   const regCloses = input.registrationClosesAt ?? input.registration_closes_at;
   if (regCloses !== undefined) updates.registrationClosesAt = regCloses;
 
+  const effectiveStartsAt = updates.startsAt ?? event.startsAt;
+  const effectiveEndsAt = updates.endsAt ?? event.endsAt;
+  if (effectiveStartsAt && effectiveEndsAt && effectiveStartsAt > effectiveEndsAt) {
+    throw AppError.badRequest('Event start time cannot be after end time.', 'INVALID_SCHEDULE');
+  }
+
+  const effectiveRegOpens = updates.registrationOpensAt ?? event.registrationOpensAt;
+  const effectiveRegCloses = updates.registrationClosesAt ?? event.registrationClosesAt;
+  if (effectiveRegOpens && effectiveRegCloses && effectiveRegOpens > effectiveRegCloses) {
+    throw AppError.badRequest('Registration opening time cannot be after closing time.', 'INVALID_REGISTRATION_WINDOW');
+  }
+
+  // Form Schema
   const rawSchema = input.formSchema ?? input.form_schema;
   if (rawSchema !== undefined) {
-    // If registrations already exist, schema changes must be validated carefully
-    const [existingReg] = await db
-      .select({ id: registrations.id })
-      .from(registrations)
-      .where(eq(registrations.eventId, eventId))
-      .limit(1);
-
-    if (existingReg && !isSuperAdmin) {
+    if (hasActiveRegistrations && !isSuperAdmin) {
       throw AppError.badRequest(
-        'Registrations already exist for this event. Form schema cannot be modified by Event Lead after registrations begin.',
+        'Active registrations already exist for this event. Form schema cannot be modified after registrations begin.',
         'FORM_SCHEMA_LOCKED'
       );
     }
@@ -430,6 +594,16 @@ export async function updateEventOperationalDetails(
     .set(updates)
     .where(eq(events.id, eventId))
     .returning();
+
+  // Audit Logging
+  await db.insert(auditLogs).values({
+    actorId: staffUser.id,
+    action: 'EVENT_UPDATED_BY_LEAD',
+    targetType: 'EVENT',
+    targetId: eventId,
+    details: { updates },
+    createdAt: Date.now(),
+  });
 
   return updatedEvent;
 }

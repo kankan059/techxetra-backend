@@ -27,7 +27,7 @@ const getEventsQuerySchema = z
   })
   .strict();
 
-const DEFAULT_EVENT_IMAGE = 'https://your-domain.com/images/alt-image.png';
+const DEFAULT_EVENT_IMAGE = 'xxx';
 
 export function formatEventResponse(event: typeof events.$inferSelect) {
   const now = Date.now();

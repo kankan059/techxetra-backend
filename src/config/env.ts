@@ -47,7 +47,7 @@ export const envSchema = z.object({
   PURCHASE_RESERVATION_TTL_MS: z.coerce.number().default(900000),
   PARTICIPANT_SESSION_TTL_MS: z.coerce.number().default(2592000000),
   STAFF_SESSION_TTL_MS: z.coerce.number().default(43200000),
-  COOKIE_SAMESITE: z.enum(['lax', 'strict', 'none']).default('lax'),
+  COOKIE_SAMESITE: z.enum(['lax', 'strict', 'none']).default(isProduction ? 'none' : 'lax'),
 });
 
 export type Env = z.infer<typeof envSchema>;

@@ -25,6 +25,7 @@ services:
     environment:
       NODE_ENV: production
       PORT: 4000
+      COOKIE_SAMESITE: ${COOKIE_SAMESITE:-none}
       DATABASE_URL: postgresql://${POSTGRES_USER:-techxetra}:${POSTGRES_PASSWORD:-techxetra_password}@postgres:5432/${POSTGRES_DB:-techxetra_db}
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-dummy_google_client_id}
       FRONTEND_ORIGIN: ${FRONTEND_ORIGIN:-http://localhost:3000}

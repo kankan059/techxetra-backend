@@ -492,6 +492,11 @@ export async function updateEventOperationalDetails(
     updatedAt: Date.now(),
   };
 
+  const imageUrl = input.imageURL ?? input.imageUrl;
+  if (imageUrl !== undefined) {
+    updates.imageUrl = imageUrl;
+  }
+
   if (input.title) updates.title = input.title.trim();
   if (input.slug) updates.slug = input.slug.trim();
   if (input.category) updates.category = input.category;

@@ -1,0 +1,2 @@
+ALTER TABLE "events" ADD COLUMN "image_url" text;--> statement-breakpoint
+CREATE UNIQUE INDEX "idx_tickets_gate_pass_unique" ON "tickets" USING btree ("purchase_item_id") WHERE "tickets"."item_type" = 'GATE_PASS';

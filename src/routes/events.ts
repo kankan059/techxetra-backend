@@ -27,6 +27,8 @@ const getEventsQuerySchema = z
   })
   .strict();
 
+const DEFAULT_EVENT_IMAGE = 'https://your-domain.com/images/alt-image.png';
+
 export function formatEventResponse(event: typeof events.$inferSelect) {
   const now = Date.now();
   const seatsRemaining =
@@ -45,6 +47,9 @@ export function formatEventResponse(event: typeof events.$inferSelect) {
     id: event.id,
     slug: event.slug,
     title: event.title,
+    imageURL: (event.imageUrl === undefined || event.imageUrl === null || event.imageUrl === "")
+  ? DEFAULT_EVENT_IMAGE
+  : event.imageUrl,
     category: event.category,
     format: event.format,
     festDay: event.festDay,

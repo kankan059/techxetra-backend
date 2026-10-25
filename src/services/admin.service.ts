@@ -383,6 +383,7 @@ export async function createEventAdmin(adminUser: UserSelect, input: any) {
     .values({
       slug,
       title: input.title,
+      imageUrl: input.imageURL ?? input.imageUrl ?? null,
       category: input.category,
       format: input.format || 'INDIVIDUAL',
       festDay: input.festDay || input.fest_day,
@@ -445,6 +446,11 @@ export async function updateEventAdmin(adminUser: UserSelect, eventId: string, i
   }
 
   const updates: Record<string, any> = { updatedAt: Date.now() };
+
+  const imageUrl = input.imageURL ?? input.imageUrl;
+  if (imageUrl !== undefined) {
+    updates.imageUrl = imageUrl;
+  }
 
   if (input.title) updates.title = input.title;
   if (input.slug) updates.slug = input.slug;

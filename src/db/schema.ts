@@ -225,6 +225,7 @@ export const events = pgTable(
     id: uuid('id').defaultRandom().primaryKey(),
     slug: text('slug').notNull().unique(),
     title: text('title').notNull(),
+    imageUrl: text('image_url'),
     category: eventCategoryEnum('category').notNull(),
     format: eventFormatEnum('format').notNull().default('INDIVIDUAL'),
     festDay: integer('fest_day').references(() => festDays.dayNumber),

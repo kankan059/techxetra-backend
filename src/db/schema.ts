@@ -226,6 +226,7 @@ export const events = pgTable(
     slug: text('slug').notNull().unique(),
     title: text('title').notNull(),
     imageUrl: text('image_url'),
+    whatsappUrl: text('whatsapp_url'),
     category: eventCategoryEnum('category').notNull(),
     format: eventFormatEnum('format').notNull().default('INDIVIDUAL'),
     festDay: integer('fest_day').references(() => festDays.dayNumber),

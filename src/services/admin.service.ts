@@ -384,6 +384,7 @@ export async function createEventAdmin(adminUser: UserSelect, input: any) {
       slug,
       title: input.title,
       imageUrl: input.imageURL ?? input.imageUrl ?? null,
+      whatsappUrl: input.whatsappUrl ?? input.whatsapp_url ?? null,
       category: input.category,
       format: input.format || 'INDIVIDUAL',
       festDay: input.festDay || input.fest_day,
@@ -450,6 +451,11 @@ export async function updateEventAdmin(adminUser: UserSelect, eventId: string, i
   const imageUrl = input.imageURL ?? input.imageUrl;
   if (imageUrl !== undefined) {
     updates.imageUrl = imageUrl;
+  }
+
+  const whatsappUrl = input.whatsappUrl ?? input.whatsapp_url;
+  if (whatsappUrl !== undefined) {
+    updates.whatsappUrl = typeof whatsappUrl === 'string' && whatsappUrl.trim() !== '' ? whatsappUrl.trim() : null;
   }
 
   if (input.title) updates.title = input.title;

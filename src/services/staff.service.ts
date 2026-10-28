@@ -335,6 +335,8 @@ export interface LeadEventUpdateInput {
   form_schema?: any[];
   registrationClosesAt?: number;
   registration_closes_at?: number;
+  whatsappUrl?: string | null;
+  whatsapp_url?: string | null;
 }
 
 const SYSTEM_ONLY_FIELDS = new Set([
@@ -544,6 +546,11 @@ export async function updateEventOperationalDetails(
   if (input.venue !== undefined) updates.venue = input.venue.trim();
   if (input.organizer !== undefined) updates.organizer = input.organizer.trim();
   if (input.eligibility !== undefined) updates.eligibility = input.eligibility;
+
+  const whatsappUrl = input.whatsappUrl ?? input.whatsapp_url;
+  if (whatsappUrl !== undefined) {
+    updates.whatsappUrl = typeof whatsappUrl === 'string' && whatsappUrl.trim() !== '' ? whatsappUrl.trim() : null;
+  }
   if (input.timeline !== undefined) updates.timeline = input.timeline;
   if (input.prizes !== undefined) updates.prizes = input.prizes;
   if (input.metadata !== undefined) updates.metadata = input.metadata;

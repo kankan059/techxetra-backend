@@ -27,6 +27,7 @@ export async function getUserTickets(userId: string) {
         festDay: events.festDay,
         startsAt: events.startsAt,
         endsAt: events.endsAt,
+        whatsappUrl: events.whatsappUrl,
       },
       registration: {
         id: registrations.id,

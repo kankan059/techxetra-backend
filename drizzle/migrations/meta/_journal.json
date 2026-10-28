@@ -15,6 +15,13 @@
       "when": 1792922529254,
       "tag": "0001_far_red_skull",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1793173217127,
+      "tag": "0002_glorious_johnny_storm",
+      "breakpoints": true
     }
   ]
 }
